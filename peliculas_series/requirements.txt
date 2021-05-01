@@ -1,0 +1,9 @@
+# Django
+Django
+django-extensions
+
+# Imagenes
+Pillow
+
+# Debug
+flake8
