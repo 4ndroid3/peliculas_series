@@ -8,6 +8,7 @@ class Pelicula_Serie(models.Model):
     Modelo de DB para la tabla de peliculas y series
 
     Campos:
+    - nombre: charfield
     - pelicula_serie: FK
     - año: int
     - puntaje_imdb: float
@@ -15,6 +16,12 @@ class Pelicula_Serie(models.Model):
     - casting: FK
     - img_portada: image
     """
+
+    nombre = models.CharField(
+        max_length = 50,
+        verbose_name = 'Nombre',
+        help_text = 'Nombre de la pelicula / serie',
+    )
 
     pelicula_serie = models.ForeignKey(
         'app.models.Tipo',
@@ -59,7 +66,7 @@ class Pelicula_Serie(models.Model):
     )
 
     def __str__(self):
-        return str(self.pelicula_serie)
+        return str(self.nombre)
     
     class Meta:
         verbose_name = 'Pelicula o Serie'
@@ -109,6 +116,10 @@ class Serie(models.Model):
         verbose_name = 'Cantidad de capitulos',
     )
 
+    class Meta:
+        verbose_name = 'Serie'
+        verbose_name_plural = 'Series'
+
 class Pelicula(models.Model):
     """ Modelo que maneja el ingreso de peliculas a la DB 
     
@@ -129,3 +140,7 @@ class Pelicula(models.Model):
         verbose_name = 'Duración',
         help_text = 'Tiempo de duración de la pelicula',
     )
+    
+    class Meta:
+        verbose_name = 'Pelicula'
+        verbose_name_plural = 'Peliculas'
