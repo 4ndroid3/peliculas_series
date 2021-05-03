@@ -65,5 +65,5 @@ class Casting(models.Model):
         return str(self.id_persona)
     
     class Meta:
-        verbose_name = 'Castgin'
+        verbose_name = 'Casting'
         verbose_name_plural = 'Castings'
