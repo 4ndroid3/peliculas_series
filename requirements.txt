@@ -8,6 +8,5 @@ Pillow
 # ImDB API
 imdbpy
 
-
 # Debug
 flake8
