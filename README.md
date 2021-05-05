@@ -1,4 +1,4 @@
 # peliculas_series
 
 # DB Design:
-![drawSQL-export-2021-05-01_15_33](https://user-images.githubusercontent.com/35976464/116792451-02e0c280-aa97-11eb-9f9a-78a3b2be44a3.png)
+![drawSQL-export-2021-05-04_23_32](https://user-images.githubusercontent.com/35976464/117091218-fd060e00-ad30-11eb-9b4d-6230e7ebc54f.png)
