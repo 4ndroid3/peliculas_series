@@ -2,17 +2,17 @@
 from django.urls import path
 
 # Project Imports
-from .views import ObtenerPelicula
+from .views import ObtenerPeliculaSerie
 
 urlpatterns = [
     path(
         route = '',
-        view = ObtenerPelicula.as_view(),
+        view = ObtenerPeliculaSerie.as_view(),
         name = 'index',
     ),
     path(
         route = '<movser>/',
-        view = ObtenerPelicula.as_view(),
+        view = ObtenerPeliculaSerie.as_view(),
         name = 'index',
     ),
 ]
