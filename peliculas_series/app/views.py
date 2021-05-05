@@ -2,8 +2,7 @@
 
 # Django Imports
 from django.shortcuts import render
-from django.views.generic import CreateView
-from django.views.generic import ListView
+from django.views.generic import TemplateView
 
 # Project Imports
 from .models import Pelicula_Serie
@@ -11,13 +10,10 @@ from .models import Pelicula_Serie
 # IMDB Imports
 from imdb import IMDb ,IMDbError
 
-class ObtenerPelicula(CreateView):
+class ObtenerPelicula(TemplateView):
     """ Clase principal para busqueda de peliculas o series
     y luego agregarlas a la db como vistas.
     """
-
-    model = Pelicula_Serie
-    fields = ['nombre',]
     template_name = 'inicio/index.html'
 
     def buscar_imdb(self, peli_serie):
@@ -25,36 +21,19 @@ class ObtenerPelicula(CreateView):
         devuelve una lista con los nombres que coinciden """
         ia = IMDb()
         search = ia.search_movie(peli_serie)
-
-        return search
-
-    def get(self, request, *args, **kwargs):
-        #import pdb; pdb.set_trace()
-        """Si especifico en la URL el kwargs movser
-        se da el try, en caso de que sea el menu principal 
-        se da el except"""
-        try:
-            peli_serie = kwargs['movser']
-        except:
-            kwargs['movser'] = ''
-            peli_serie = kwargs['movser']
-
-        kwargs['busqueda'] = self.buscar_imdb(peli_serie)
-        
-
-        return super().get(request, *args, **kwargs)
+        list_search = []
+        for x in search:
+            list_search += [[x['title'], x['year'], x['cover url']]]
+        return list_search
     
-    def get_context_data(self, **kwargs):
-        print(kwargs)
-        """Insert the single object into the context dict."""
-        context = {}
-        if self.object:
-            context['object'] = self.object
-            context_object_name = self.get_context_object_name(self.object)
-            if context_object_name:
-                context[context_object_name] = self.object
-        context.update(kwargs)
-        return super().get_context_data(**context)
+    def get(self, request, *args, **kwargs):
+        try:
+            busqueda = kwargs['movser']            
+        except:
+            busqueda = kwargs['movser'] = ''
+        context = self.get_context_data(**kwargs)
+        context['busqueda'] = self.buscar_imdb(busqueda)
+        return self.render_to_response(context)
 
         
 
