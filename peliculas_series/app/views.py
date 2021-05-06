@@ -37,5 +37,10 @@ class ObtenerPeliculaSerie(TemplateView):
         
         return self.render_to_response(context)
 
+class MostrarPeliculaSerie(TemplateView):
+    """ Al seleccionar una pelicula de la lista dada en ObtenerPeliculaSerie
+    muestra la informacion completa de la pelicula"""
+    template_name = 'inicio/movie_info.html'
+
         
 
