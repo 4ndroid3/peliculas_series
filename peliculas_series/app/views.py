@@ -49,18 +49,38 @@ class MostrarPeliculaSerie(TemplateView):
         se le pasa como parametro un numero de ID"""
         ia = IMDb()
         search = ia.get_movie(id_peli_serie)
-        info_peli_serie = {
-            'tipo': search['kind'],
-            'titulo': search['title'],
-            'año': search['year'],
-        }
+
+        # Cuando IMDB busca una serie, esta no 
+        # tiene director, entonces se la separa con el IF.
+        if search['kind'] != 'movie':
+            info_peli_serie = {
+                'tipo': search['kind'],
+                'titulo': search['title'],
+                'año': search['year'],
+                'duracion': search['runtime'][0],
+                'puntaje': search['rating'],
+                'generos': search['genres'],
+                'imagen': search['full-size cover url'],
+                'casting': search['cast'][0:6]
+            }
+        else:
+            info_peli_serie = {
+                'tipo': search['kind'],
+                'titulo': search['title'],
+                'año': search['year'],
+                'duracion': search['runtime'][0],
+                'puntaje': search['rating'],
+                'generos': search['genres'],
+                'imagen': search['full-size cover url'],
+                'director': search['director'],
+                'casting': search['cast'][0:4]
+            }
 
         return info_peli_serie
 
     def get(self, request, *args, **kwargs):
         try:
             busqueda = kwargs['movser']
-            #import pdb; pdb.set_trace()
             context = self.get_context_data(**kwargs)
             context['busqueda'] = self.traer_imdb(busqueda)            
         except:

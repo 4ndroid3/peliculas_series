@@ -16,7 +16,7 @@ urlpatterns = [
         name = 'index',
     ),
     path(
-        route = 'movieser/<movser>/',
+        route = 'movies/<movser>/',
         view = MostrarPeliculaSerie.as_view(),
         name = 'movie_serie',
     ),
