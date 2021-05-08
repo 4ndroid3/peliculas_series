@@ -9,7 +9,7 @@ Duración.
 Casting.
 Directores.
 
-Luego con estos datos se hacem informes mensuales con los que ir
+Luego con estos datos se hacen informes mensuales con los que ir
 comparando a traves del tiempo
 
 # DB Design:

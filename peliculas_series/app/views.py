@@ -3,9 +3,11 @@
 # Django Imports
 from django.shortcuts import render
 from django.views.generic import TemplateView
+from django.views.generic import FormView
 
 # Project Imports
 from .models import Pelicula_Serie
+from .forms import SeleccionarMovieForm
 
 # IMDB Imports
 from imdb import IMDb ,IMDbError
@@ -39,10 +41,11 @@ class ObtenerPeliculaSerie(TemplateView):
         
         return self.render_to_response(context)
 
-class MostrarPeliculaSerie(TemplateView):
+class MostrarPeliculaSerie(FormView):
     """ Al seleccionar una pelicula de la lista dada en ObtenerPeliculaSerie
     muestra la informacion completa de la pelicula"""
     template_name = 'inicio/movie_info.html'
+    form_class = SeleccionarMovieForm
 
     def traer_imdb(self, id_peli_serie):
         """ funcion que trae una pelicula/serie cuando 
