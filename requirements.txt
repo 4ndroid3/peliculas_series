@@ -5,6 +5,9 @@ django-extensions
 # Imagenes
 Pillow
 
+# Celery
+Celery
+
 # ImDB API
 imdbpy
 

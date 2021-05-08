@@ -1,9 +1,14 @@
-<p>{{busqueda.tipo}}</p>
+<p>{{busqueda.tipo.capitalize}}</p>
 <p>{{busqueda.titulo}}</p>
-<p>{{busqueda.año}}</p>
-<p>{{busqueda.duracion}}</p>
-<p>{{busqueda.puntaje}}</p>
-<p>{{busqueda.generos}}</p>
-<p>{{busqueda.imagen}}</p>
-<p>{{busqueda.director}}</p>
-<p>{{busqueda.casting}}</p>
+<p>Año: {{busqueda.año}}</p>
+
+<p>Duracion: {{busqueda.duracion}} minutos</p>
+<p>Puntaje IMDb: {{busqueda.puntaje}}</p>
+<p>Generos: {{busqueda.generos}}</p>
+<img src="{{busqueda.imagen}}" alt="" width="300" height="400">
+<p>Direccion: {{busqueda.director}}</p>
+<p>Casting: {{busqueda.casting}}</p>
+
+<form action="" method="post">{% csrf_token %}
+    <button type="submit" class="btn btn-primary">Agregar</button>
+</form>

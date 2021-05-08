@@ -1,7 +1,10 @@
 
 {% for x in busqueda %}
+<a href="../movies/{{x.3}}">
 <p>
-   {{x.0}}, {{x.1}}, {{x.2}}, ID: {{x.3}}
+   {{x.0}} - {{x.1}}
 </p>    
+</a>
+<img src="{{x.2}}" alt="">
 
 {% endfor %}

@@ -24,7 +24,7 @@ class ObtenerPeliculaSerie(TemplateView):
         list_search = []
         for x in search:
             try:
-                list_search += [[x['title'], x['year'], x['full-size cover url'], x.getID()]]
+                list_search += [[x['title'], x['year'], x['cover url'], x.getID()]]
             except:
                 list_search += [['Error en IMDB']]
         return list_search
