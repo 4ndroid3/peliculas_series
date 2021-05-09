@@ -46,6 +46,7 @@ class MostrarPeliculaSerie(FormView):
     muestra la informacion completa de la pelicula"""
     template_name = 'inicio/movie_info.html'
     form_class = SeleccionarMovieForm
+    success_url = '/'
 
     def traer_imdb(self, id_peli_serie):
         """ funcion que trae una pelicula/serie cuando 
@@ -64,7 +65,8 @@ class MostrarPeliculaSerie(FormView):
                 'puntaje': search['rating'],
                 'generos': search['genres'],
                 'imagen': search['full-size cover url'],
-                'casting': search['cast'][0:6]
+                'casting': search['cast'][0:6],
+                'id': search.getID()
             }
         else:
             info_peli_serie = {
@@ -76,7 +78,8 @@ class MostrarPeliculaSerie(FormView):
                 'generos': search['genres'],
                 'imagen': search['full-size cover url'],
                 'director': search['director'],
-                'casting': search['cast'][0:4]
+                'casting': search['cast'][0:4],
+                'id': search.getID()
             }
 
         return info_peli_serie
@@ -89,4 +92,20 @@ class MostrarPeliculaSerie(FormView):
         except:
             context = self.get_context_data(**kwargs)
         return self.render_to_response(context)
+        # import pdb; pdb.set_trace()
 
+    def post(self, request, *args, **kwargs):
+        """
+        Handle POST requests: instantiate a form instance with the passed
+        POST variables and then check if it's valid.
+        """
+        form = self.get_form()
+        if form.is_valid():
+            self.agregar_pelicula_serie(form.cleaned_data)
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    
+    def agregar_pelicula_serie(self, form):
+        form['movie_id']

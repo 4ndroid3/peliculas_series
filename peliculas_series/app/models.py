@@ -76,6 +76,7 @@ class Tipo(models.Model):
 
     def __str__(self):
         return str(self.id_pelicula, self.id_serie)
+    
 
 class Pelicula_Serie(models.Model):
     """
