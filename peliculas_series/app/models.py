@@ -138,6 +138,13 @@ class Pelicula_Serie(models.Model):
         help_text = 'Imagen de portada de la pelicula o serie',
         verbose_name = 'Portada',
     )
+    id_imdb = models.CharField(
+        max_length = 25,
+        blank = True,
+        null = True,
+        verbose_name = 'Id IMDb',
+        help_text = 'ID unico de IMDb',
+    )
 
     def __str__(self):
         return str(self.nombre)

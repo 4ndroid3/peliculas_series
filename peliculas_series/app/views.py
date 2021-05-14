@@ -6,7 +6,9 @@ from django.views.generic import TemplateView
 from django.views.generic import FormView
 
 # Project Imports
-from .models import Pelicula_Serie
+from .models import Pelicula_Serie, Serie, Pelicula, Tipo
+from users.models import Vista, User, Profile
+from personas.models import Persona, Casting
 from .forms import SeleccionarMovieForm
 
 # IMDB Imports
@@ -53,7 +55,7 @@ class MostrarPeliculaSerie(FormView):
         se le pasa como parametro un numero de ID"""
         ia = IMDb()
         search = ia.get_movie(id_peli_serie)
-
+        #import pdb; pdb.set_trace()
         # Cuando IMDB busca una serie, esta no 
         # tiene director, entonces se la separa con el IF.
         if search['kind'] != 'movie':
@@ -61,11 +63,11 @@ class MostrarPeliculaSerie(FormView):
                 'tipo': search['kind'],
                 'titulo': search['title'],
                 'año': search['year'],
-                'duracion': search['runtime'][0],
                 'puntaje': search['rating'],
                 'generos': search['genres'],
                 'imagen': search['full-size cover url'],
                 'casting': search['cast'][0:6],
+                'seasons:': search['seasons'],
                 'id': search.getID()
             }
         else:
@@ -92,7 +94,6 @@ class MostrarPeliculaSerie(FormView):
         except:
             context = self.get_context_data(**kwargs)
         return self.render_to_response(context)
-        # import pdb; pdb.set_trace()
 
     def post(self, request, *args, **kwargs):
         """
@@ -104,8 +105,14 @@ class MostrarPeliculaSerie(FormView):
             self.agregar_pelicula_serie(form.cleaned_data)
             return self.form_valid(form)
         else:
+            print('invalid form')
             return self.form_invalid(form)
 
     
     def agregar_pelicula_serie(self, form):
-        form['movie_id']
+        """
+        Recibo los parametros del form, un diccionario, con
+        todos los datos de la pelicula, luego los cargo en la DB
+        """
+        info_peli_serie = self.traer_imdb(form['movie_id'])
+        
