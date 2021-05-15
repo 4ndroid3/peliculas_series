@@ -49,7 +49,8 @@ class Pelicula(models.Model):
         help_text = 'Director de la Pelicula',
         verbose_name = 'Director',
     )
-    duracion = models.DurationField(
+    duracion = models.CharField(
+        max_length = 50,
         blank = True,
         verbose_name = 'Duración',
         help_text = 'Tiempo de duración de la pelicula',
@@ -66,16 +67,36 @@ class Tipo(models.Model):
         on_delete = models.CASCADE,
         blank = True,
         null = True,
+        default=''
     )
     id_pelicula = models.OneToOneField(
         Pelicula,
         on_delete = models.CASCADE,
         blank = True,
         null = True,
+        default=''
+    )
+    def __str__(self):
+        if self.id_pelicula != '':
+            return str(self.id_pelicula)
+        else:
+            return str(self.id_serie)
+
+class Genero(models.Model):
+    tipo_genero= models.CharField(
+        max_length = 25,
+        blank = True,
+        null = True,
+        verbose_name = 'Genero',
+        help_text = 'Genero de la pelicula o serie',
     )
 
     def __str__(self):
-        return str(self.id_pelicula, self.id_serie)
+        return str(self.tipo_genero)
+    
+    class Meta:
+        verbose_name = 'Genero'
+        verbose_name_plural = 'Generos'
     
 
 class Pelicula_Serie(models.Model):
@@ -117,17 +138,19 @@ class Pelicula_Serie(models.Model):
         null = True,
         help_text = 'Puntaje de la pagina IMDb',
         verbose_name = 'Puntaje IMDb',
-    )
-    genero = models.CharField(
-        max_length = 25,
-        blank = True,
-        null = True,
-        verbose_name = 'Genero',
+    )    
+    genero = models.ManyToManyField(
+        Genero,
+        blank=True,
         help_text = 'Genero de la pelicula o serie',
+        verbose_name = 'Genero',
+
     )
     casting = models.OneToOneField(
         Casting,
         on_delete = models.CASCADE,
+        blank=True,
+        null=True,
         help_text = 'Casting de la pelicula o serie',
         verbose_name = 'Casting',
     )
@@ -152,3 +175,4 @@ class Pelicula_Serie(models.Model):
     class Meta:
         verbose_name = 'Pelicula o Serie'
         verbose_name_plural = 'Peliculas o Series'
+

@@ -55,7 +55,6 @@ class MostrarPeliculaSerie(FormView):
         se le pasa como parametro un numero de ID"""
         ia = IMDb()
         search = ia.get_movie(id_peli_serie)
-        #import pdb; pdb.set_trace()
         # Cuando IMDB busca una serie, esta no 
         # tiene director, entonces se la separa con el IF.
         if search['kind'] != 'movie':
@@ -67,7 +66,7 @@ class MostrarPeliculaSerie(FormView):
                 'generos': search['genres'],
                 'imagen': search['full-size cover url'],
                 'casting': search['cast'][0:6],
-                'seasons:': search['seasons'],
+                'seasons': str(search['seasons']),
                 'id': search.getID()
             }
         else:
@@ -115,4 +114,6 @@ class MostrarPeliculaSerie(FormView):
         todos los datos de la pelicula, luego los cargo en la DB
         """
         info_peli_serie = self.traer_imdb(form['movie_id'])
+        import pdb; pdb.set_trace()
+
         

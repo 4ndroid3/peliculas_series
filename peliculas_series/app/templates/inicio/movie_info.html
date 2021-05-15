@@ -1,14 +1,13 @@
 <p>{{busqueda.tipo.capitalize}}</p>
 <p>{{busqueda.titulo}}</p>
 <p>Año: {{busqueda.año}}</p>
-
 <p>Duracion: {{busqueda.duracion}} minutos</p>
+<p>Temporadas: {{busqueda.seasons}}</p>
 <p>Puntaje IMDb: {{busqueda.puntaje}}</p>
 <p>Generos: {{busqueda.generos}}</p>
 <img src="{{busqueda.imagen}}" alt="" width="300" height="400">
 <p>Direccion: {{busqueda.director}}</p>
 <p>Casting: {{busqueda.casting}}</p>
-
 <form action="" method="post">{% csrf_token %}
     <input 
         type="hidden"
