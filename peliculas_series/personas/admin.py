@@ -9,8 +9,4 @@ class CustomPersonaAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'apellido', 'director', )
     list_filter = ('apellido', 'nombre', 'director')
 
-class CustomCastingAdmin(admin.ModelAdmin):
-    list_display = ('id_persona',)
-
 admin.site.register(Persona, CustomPersonaAdmin)
-admin.site.register(Casting, CustomCastingAdmin)

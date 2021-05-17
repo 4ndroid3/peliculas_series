@@ -6,7 +6,7 @@ from django.views.generic import TemplateView
 from django.views.generic import FormView
 
 # Project Imports
-from .models import Pelicula_Serie, Serie, Pelicula, Tipo
+from .models import Pelicula_Serie, Serie, Pelicula, Tipo, Genero
 from users.models import Vista, User, Profile
 from personas.models import Persona, Casting
 from .forms import SeleccionarMovieForm
@@ -110,10 +110,9 @@ class MostrarPeliculaSerie(FormView):
     
     def agregar_pelicula_serie(self, form):
         """
-        Recibo los parametros del form, un diccionario, con
-        todos los datos de la pelicula, luego los cargo en la DB
+        Recibo el ID de la pelicula dsde el form del front.
+        Con el ID busco toda la informacion que va a ir a la DB
         """
         info_peli_serie = self.traer_imdb(form['movie_id'])
-        import pdb; pdb.set_trace()
-
         
+        import pdb; pdb.set_trace()

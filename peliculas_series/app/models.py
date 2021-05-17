@@ -84,7 +84,8 @@ class Tipo(models.Model):
 
 class Genero(models.Model):
     tipo_genero= models.CharField(
-        max_length = 25,
+        max_length = 50,
+        unique= True,
         blank = True,
         null = True,
         verbose_name = 'Genero',
@@ -144,13 +145,10 @@ class Pelicula_Serie(models.Model):
         blank=True,
         help_text = 'Genero de la pelicula o serie',
         verbose_name = 'Genero',
-
     )
-    casting = models.OneToOneField(
-        Casting,
-        on_delete = models.CASCADE,
+    casting = models.ManyToManyField(
+        Persona,
         blank=True,
-        null=True,
         help_text = 'Casting de la pelicula o serie',
         verbose_name = 'Casting',
     )
