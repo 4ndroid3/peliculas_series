@@ -55,8 +55,20 @@ class MostrarPeliculaSerie(FormView):
         se le pasa como parametro un numero de ID"""
         ia = IMDb()
         search = ia.get_movie(id_peli_serie)
+
+        # Armo una lista con los Objetos Persona, luego los paso a str
+        casting = []
+        for cast in search['cast'][0:5]: casting.append(cast['name'])
+        casting = ', '.join(casting)
+
+        director = []
+        #for dir in search['director']: director = ', '.join(dir['name'])
+        for dir in search['director'][0:5]: director.append(dir['name'])
+        director = ', '.join(director)
+
         # Cuando IMDB busca una serie, esta no 
         # tiene director, entonces se la separa con el IF.
+
         if search['kind'] != 'movie':
             info_peli_serie = {
                 'tipo': search['kind'],
@@ -67,14 +79,8 @@ class MostrarPeliculaSerie(FormView):
                 'imagen': search['full-size cover url'],
                 'seasons': str(search['seasons']),
                 'id': search.getID(),
-                'casting1': search['cast'][0],
-                'casting2': search['cast'][1],
-                'casting3': search['cast'][2],
-                'casting4': search['cast'][3],
-                'casting5': search['cast'][4],
-                'casting6': search['cast'][5],
+                'casting': casting,
             }
-
         else:
             info_peli_serie = {
                 'tipo': search['kind'],
@@ -84,12 +90,9 @@ class MostrarPeliculaSerie(FormView):
                 'puntaje': search['rating'],
                 'generos': search['genres'],
                 'imagen': search['full-size cover url'],
-                'director': search['director'],
+                'director': director,
                 'id': search.getID(),
-                'casting1': search['cast'][0],
-                'casting2': search['cast'][1],
-                'casting3': search['cast'][2],
-                'casting4': search['cast'][3],
+                'casting': casting,
             }
 
         return info_peli_serie
