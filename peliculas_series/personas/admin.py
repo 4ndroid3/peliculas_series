@@ -3,7 +3,7 @@
 from django.contrib import admin
 
 # Project Imports
-from .models import Persona, Casting
+from .models import Persona
 
 class CustomPersonaAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'apellido', 'director', )

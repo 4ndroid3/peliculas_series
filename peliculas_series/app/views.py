@@ -8,7 +8,7 @@ from django.views.generic import FormView
 # Project Imports
 from .models import Pelicula_Serie, Serie, Pelicula, Tipo, Genero
 from users.models import Vista, User, Profile
-from personas.models import Persona, Casting
+from personas.models import Persona
 from .forms import SeleccionarMovieForm
 
 # IMDB Imports
@@ -65,10 +65,16 @@ class MostrarPeliculaSerie(FormView):
                 'puntaje': search['rating'],
                 'generos': search['genres'],
                 'imagen': search['full-size cover url'],
-                'casting': search['cast'][0:6],
                 'seasons': str(search['seasons']),
-                'id': search.getID()
+                'id': search.getID(),
+                'casting1': search['cast'][0],
+                'casting2': search['cast'][1],
+                'casting3': search['cast'][2],
+                'casting4': search['cast'][3],
+                'casting5': search['cast'][4],
+                'casting6': search['cast'][5],
             }
+
         else:
             info_peli_serie = {
                 'tipo': search['kind'],
@@ -79,8 +85,11 @@ class MostrarPeliculaSerie(FormView):
                 'generos': search['genres'],
                 'imagen': search['full-size cover url'],
                 'director': search['director'],
-                'casting': search['cast'][0:4],
-                'id': search.getID()
+                'id': search.getID(),
+                'casting1': search['cast'][0],
+                'casting2': search['cast'][1],
+                'casting3': search['cast'][2],
+                'casting4': search['cast'][3],
             }
 
         return info_peli_serie
@@ -114,5 +123,7 @@ class MostrarPeliculaSerie(FormView):
         Con el ID busco toda la informacion que va a ir a la DB
         """
         info_peli_serie = self.traer_imdb(form['movie_id'])
+        #person.getfullsizeURL()
         
+
         import pdb; pdb.set_trace()

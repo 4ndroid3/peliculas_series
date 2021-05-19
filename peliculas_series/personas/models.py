@@ -44,26 +44,3 @@ class Persona(models.Model):
     class Meta:
         verbose_name = 'Persona'
         verbose_name_plural = 'Personas'
-
-class Casting(models.Model):
-    """ Grupo de personas que conforman el casting
-    de una pelicula o serie
-
-    Campos:
-    - id_persona: FK
-    """
-    id_persona = models.ForeignKey(
-        Persona,
-        on_delete = models.CASCADE,
-        blank = True,
-        null = True,
-        verbose_name = 'Actriz o Actor',
-        help_text = 'Actriz o actor que conforman el casting de una pelicula',
-    )
-
-    def __str__(self):
-        return str(self.id_persona)
-    
-    class Meta:
-        verbose_name = 'Casting'
-        verbose_name_plural = 'Castings'

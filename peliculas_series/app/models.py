@@ -4,7 +4,7 @@
 from django.db import models
 
 # Project Imports
-from personas.models import Persona, Casting
+from personas.models import Persona
 
 class Serie(models.Model):
     """ Modelo que maneja el ingreso de series a la DB 
@@ -112,6 +112,7 @@ class Pelicula_Serie(models.Model):
     - genero: char
     - casting: FK
     - img_portada: image
+    - id_imdb
     """
 
     nombre = models.CharField(
@@ -123,13 +124,13 @@ class Pelicula_Serie(models.Model):
     pelicula_serie = models.ForeignKey(
         Tipo,
         on_delete = models.CASCADE,
-        help_text = 'Es una pelicula o una serie?',
+        help_text = 'ID',
         verbose_name = 'Pelicula / Serie', 
     )
     año = models.PositiveIntegerField(
         blank = True,
         null=True,
-        help_text = 'Año en que se publico el libro.',
+        help_text = 'Año en que se estreno la pelicula/serie.',
         verbose_name = 'Año de publicación',
     )
     puntaje_imdb = models.DecimalField(
@@ -163,7 +164,7 @@ class Pelicula_Serie(models.Model):
         max_length = 25,
         blank = True,
         null = True,
-        verbose_name = 'Id IMDb',
+        verbose_name = 'ID IMDb',
         help_text = 'ID unico de IMDb',
     )
 
