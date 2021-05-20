@@ -14,7 +14,7 @@ class CustomTipoAdmin(admin.ModelAdmin):
     list_display = ('id_serie', 'id_pelicula',)
 
 class CustomPeliculaAdmin(admin.ModelAdmin):
-    list_display = ('duracion', 'director',)
+    list_display = ('duracion',)
     list_filter = ('director',)
 
 class CustomSerieAdmin(admin.ModelAdmin):

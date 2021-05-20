@@ -7,26 +7,20 @@ class Persona(models.Model):
     y directores que serán registrados en las peliculas y series.
     
     Campos:
-    - nombre: charfield
-    - apellido: charfield
+    - nombre_apellido: charfield
     - img_persona: image
     - director: boolean
+    - id_imdb: charfield
     """
 
-    nombre = models.CharField(
+    nombre_apellido = models.CharField(
         blank = False,
-        max_length = 50,
-        verbose_name = 'Nombre',
-        help_text = 'Nombre de la persona',
+        max_length = 100,
+        verbose_name = 'Nombre y Apellido',
+        help_text = 'Nombre y Apellido de la persona',
     )
-    apellido = models.CharField(
-        blank = False,
-        max_length = 50,
-        verbose_name = 'Apellido',
-        help_text = 'Apellido de la persona',
-    )
-    img_persona = models.ImageField(
-        upload_to = 'persona_img', 
+    img_persona = models.CharField(
+        max_length= 500,
         blank = True,
         null=True,
         help_text = 'Imagen de la persona',
@@ -37,9 +31,17 @@ class Persona(models.Model):
         verbose_name = 'Es Director',
         help_text = 'Identifica si la persona es director',
     )
+    id_imdb = models.CharField(
+        max_length = 25,
+        unique=True,
+        blank = True,
+        null = True,
+        verbose_name = 'ID IMDb',
+        help_text = 'ID unico de IMDb',
+    )
 
     def __str__(self):
-        return str(self.nombre, ' ', self.apellido)
+        return str(self.nombre_apellido)
     
     class Meta:
         verbose_name = 'Persona'

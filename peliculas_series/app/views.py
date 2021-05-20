@@ -126,9 +126,20 @@ class MostrarPeliculaSerie(FormView):
         Recibo el ID de la pelicula dsde el form del front.
         Con el ID busco toda la informacion que va a ir a la DB
         """
-        ia = IMDb()
-        peli_oserie = ia.get_movie(form['movie_id'])
-        #director = ia.get_person(peli_oserie['director'])
+        try:
+            ia = IMDb()
+            peli_o_serie = ia.get_movie(form['movie_id'])
+            for director in peli_o_serie['director']:
+                persona = ia.get_person(director.getID())
+                agregar_persona = Persona(
+                    nombre_apellido=persona['name'],
+                    img_persona=persona.get_fullsizeURL(),
+                    director=True,
+                    id_imdb=persona.getID()
+                )
+                agregar_persona.save()
+        except:
+            print('La Persona ya fue agregada a la DB')
 
-        #person.getfullsizeURL()
-        import pdb; pdb.set_trace()
+        #person.get_fullsizeURL()
+        #import pdb; pdb.set_trace()

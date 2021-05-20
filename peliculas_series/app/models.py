@@ -41,11 +41,9 @@ class Pelicula(models.Model):
     - duracion: time
     - director: FK
     """
-    director = models.ForeignKey(
+    director = models.ManyToManyField(
         Persona,
-        on_delete = models.CASCADE,
-        blank = True,
-        null = True,
+        blank=True,
         help_text = 'Director de la Pelicula',
         verbose_name = 'Director',
     )
@@ -153,8 +151,8 @@ class Pelicula_Serie(models.Model):
         help_text = 'Casting de la pelicula o serie',
         verbose_name = 'Casting',
     )
-    img_portada = models.ImageField(
-        upload_to = 'portada_img', 
+    img_portada = models.CharField(
+        max_length = 300,
         blank = True,
         null=True,
         help_text = 'Imagen de portada de la pelicula o serie',

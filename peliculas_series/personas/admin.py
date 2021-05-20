@@ -6,7 +6,7 @@ from django.contrib import admin
 from .models import Persona
 
 class CustomPersonaAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'apellido', 'director', )
-    list_filter = ('apellido', 'nombre', 'director')
+    list_display = ('nombre_apellido','director', )
+    list_filter = ('nombre_apellido', 'director')
 
 admin.site.register(Persona, CustomPersonaAdmin)
