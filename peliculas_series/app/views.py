@@ -56,13 +56,14 @@ class MostrarPeliculaSerie(FormView):
         ia = IMDb()
         search = ia.get_movie(id_peli_serie)
 
-        # Armo una lista con los Objetos Persona, luego los paso a str
+        # Armo una lista con los Objetos Persona, luego los paso 
+        # a str para poder presentarlos en el Template, de casting
+        # y director
         casting = []
         for cast in search['cast'][0:5]: casting.append(cast['name'])
         casting = ', '.join(casting)
 
         director = []
-        #for dir in search['director']: director = ', '.join(dir['name'])
         for dir in search['director'][0:5]: director.append(dir['name'])
         director = ', '.join(director)
 
@@ -88,7 +89,7 @@ class MostrarPeliculaSerie(FormView):
                 'año': search['year'],
                 'duracion': search['runtime'][0],
                 'puntaje': search['rating'],
-                'generos': search['genres'],
+                'generos': ', '.join(search['genres']),
                 'imagen': search['full-size cover url'],
                 'director': director,
                 'id': search.getID(),
@@ -125,8 +126,9 @@ class MostrarPeliculaSerie(FormView):
         Recibo el ID de la pelicula dsde el form del front.
         Con el ID busco toda la informacion que va a ir a la DB
         """
-        info_peli_serie = self.traer_imdb(form['movie_id'])
-        #person.getfullsizeURL()
-        
+        ia = IMDb()
+        peli_oserie = ia.get_movie(form['movie_id'])
+        #director = ia.get_person(peli_oserie['director'])
 
+        #person.getfullsizeURL()
         import pdb; pdb.set_trace()
