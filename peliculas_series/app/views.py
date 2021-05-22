@@ -133,7 +133,7 @@ class MostrarPeliculaSerie(FormView):
 
 
         #import pdb; pdb.set_trace()
-        
+
         try:
             peli_en_db = Pelicula_Serie.objects.get(id_imdb=form['movie_id']).id_imdb
         except:
@@ -192,5 +192,36 @@ class MostrarPeliculaSerie(FormView):
                     agregar_genero.save()
                 else:
                     print('El genero ya está en la DB')
+            
+            # Agrego pelicula o serie a la DB
+            if peli_o_serie['kind'] == 'movie':
+                pelicula = Pelicula(duracion=peli_o_serie['runtime'][0])
+                pelicula.save()
+
+                for pel in peli_o_serie['director']:
+                    pelicula.director.add(Persona.objects.get(
+                            nombre_apellido=pel
+                        )
+                    )
+                    pelicula.save()
+                
+                # Agrego la clase tipo pelicula
+                tipo = Tipo(id_pelicula=pelicula)
+                tipo.save()
+            else:
+                print('es serie')
+            
+            # Agrego clase Pelicula_Serie a la DB
+            pelicula_serie = Pelicula_Serie(
+                nombre=peli_o_serie['title'],
+                pelicula_serie=tipo,
+                año=peli_o_serie['year'],
+                puntaje_imdb=peli_o_serie['rating'],
+                img_portada=peli_o_serie['full-size cover url'],
+                id_imdb=peli_o_serie.getID()
+            )
+
+            pelicula_serie.save()
+
         else:
             print('La Pelicula ya está agregada a la BD')

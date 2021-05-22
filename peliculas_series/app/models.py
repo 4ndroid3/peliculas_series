@@ -122,6 +122,8 @@ class Pelicula_Serie(models.Model):
     pelicula_serie = models.ForeignKey(
         Tipo,
         on_delete = models.CASCADE,
+        blank = True,
+        null=True,
         help_text = 'ID',
         verbose_name = 'Pelicula / Serie', 
     )
