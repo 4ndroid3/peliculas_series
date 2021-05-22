@@ -128,9 +128,12 @@ class MostrarPeliculaSerie(FormView):
         """
         ia = IMDb()
         peli_o_serie = ia.get_movie(form['movie_id'])
-        #import pdb; pdb.set_trace()
         # Si la peli / serie no está en la DB 
         # debo agregar todos los datos
+
+
+        #import pdb; pdb.set_trace()
+        
         try:
             peli_en_db = Pelicula_Serie.objects.get(id_imdb=form['movie_id']).id_imdb
         except:
@@ -140,41 +143,36 @@ class MostrarPeliculaSerie(FormView):
             # Busco director por director para ver si está en la DB
             for director in peli_o_serie['director']:
                 try:
-                    persona_en_db = Persona.objects.get(id_imdb=director.getID())
+                    persona_en_db = Persona.objects.get(id_imdb=director.getID()).id_imdb
                 except:
                     persona_en_db = ''
 
                 if director.getID() != persona_en_db:
-                    #import pdb; pdb.set_trace()
                     # La persona no se encuentra en la DB 
                     # asique se la agrega
-                    persona = ia.get_person(director.getID())
                     agregar_persona = Persona(
-                        nombre_apellido=persona['name'],
-                        img_persona=persona.get_fullsizeURL(),
+                        nombre_apellido=director['name'],
                         director=True,
-                        id_imdb=persona.getID()
+                        id_imdb=director.getID()
                     )
                     agregar_persona.save()
                 else:
                     print('La persona ya está en la DB')
             
             # Busco actor por actor para ver si está en la DB
-            for actor in peli_o_serie['cast'][0:2]:
+            for actor in peli_o_serie['cast'][0:5]:
                 try:
-                    persona_en_db = Persona.objects.get(id_imdb=actor.getID())
+                    persona_en_db = Persona.objects.get(id_imdb=actor.getID()).id_imdb
                 except:
                     persona_en_db = ''
 
                 if actor.getID() != persona_en_db:
                     # La persona no se encuentra en la DB 
                     # asique se la agrega
-                    persona = ia.get_person(actor.getID())
                     agregar_persona = Persona(
-                        nombre_apellido=persona['name'],
-                        img_persona=persona.get_fullsizeURL(),
+                        nombre_apellido=actor['name'],
                         director=False,
-                        id_imdb=persona.getID()
+                        id_imdb=actor.getID()
                     )
                     agregar_persona.save()
                 else:
@@ -183,7 +181,7 @@ class MostrarPeliculaSerie(FormView):
             # Busco genero por genero para ver si está en la DB
             for genero in peli_o_serie['genres']:
                 try:
-                    genero_en_db = Genero.objects.get(tipo_genero=genero)
+                    genero_en_db = Genero.objects.get(tipo_genero=genero).tipo_genero
                 except:
                     genero_en_db = ''
 
