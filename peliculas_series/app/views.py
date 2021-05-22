@@ -223,5 +223,20 @@ class MostrarPeliculaSerie(FormView):
 
             pelicula_serie.save()
 
+            for casting_pelicula in peli_o_serie['cast'][0:5]:
+                #import pdb; pdb.set_trace()
+                pelicula_serie.casting.add(Persona.objects.get(
+                        nombre_apellido=casting_pelicula
+                    )
+                )
+                pelicula_serie.save()
+            
+            for genero_pelicula in peli_o_serie['genres']:
+                pelicula_serie.genero.add(Genero.objects.get(
+                        tipo_genero=genero_pelicula
+                    )
+                )
+                pelicula_serie.save()
+
         else:
             print('La Pelicula ya está agregada a la BD')
