@@ -13,60 +13,12 @@ class SeleccionarMovieForm(forms.Form):
             }
         )
     )
-    """
-    año = forms.CharField(
-        widget=forms.HiddenInput(
+    temporada = forms.IntegerField(
+        widget=forms.NumberInput(
             attrs= {
-                'value':'',
+                'class': 'form-control',
+                'placeholder': 'Numero de la temporada',
+                'value': "0",
             }
         )
     )
-    duracion = forms.CharField(
-        widget=forms.HiddenInput(
-            attrs= {
-                'value':'',
-            }
-        )
-    )
-    puntaje = forms.CharField(
-        widget=forms.HiddenInput(
-            attrs= {
-                'value':'',
-            }
-        )
-    )
-    generos = forms.CharField(
-        widget=forms.HiddenInput(
-            attrs= {
-                'value':'',
-            }
-        )
-    )
-    imagen = forms.CharField(
-        widget=forms.HiddenInput(
-            attrs= {
-                'value':'',
-            }
-        )
-    )
-    director = forms.CharField(
-        widget=forms.HiddenInput(
-            attrs= {
-                'value':'',
-            }
-        )
-    )
-    casting = forms.CharField(
-        widget=forms.HiddenInput(
-            attrs= {
-                'value':'',
-            }
-        )
-    )
-    movie_id = forms.CharField(
-        widget=forms.HiddenInput(
-            attrs= {
-                'value':'',
-            }
-        )
-    )"""

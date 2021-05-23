@@ -1,17 +1,49 @@
-<p>{{busqueda.tipo.capitalize}}</p>
-<p>{{busqueda.titulo}}</p>
-<p>Año: {{busqueda.año}}</p>
-<p>Duracion: {{busqueda.duracion}} minutos</p>
-<p>Temporadas: {{busqueda.seasons}}</p>
-<p>Puntaje IMDb: {{busqueda.puntaje}}</p>
-<p>Generos: {{busqueda.generos}}</p>
-<img src="{{busqueda.imagen}}" alt="" width="300" height="400">
-<p>Direccion: {{busqueda.director}}</p>
-<p>Casting: {{busqueda.casting}}</p>
-<form action="" method="post">{% csrf_token %}
-    <input 
-        type="hidden"
-        name="movie_id"
-        value="{{busqueda.id}}">
-    <button type="submit" class="btn btn-primary">Agregar</button>
-</form>
+{% if busqueda.tipo|length < 9 %}
+    {# Muestra los datos de una pelicula #}
+    <p>{{busqueda.tipo.capitalize}}</p>
+    <p>{{busqueda.titulo}}</p>
+    <p>Año: {{busqueda.año}}</p>
+    <p>Duracion: {{busqueda.duracion}} minutos</p>
+    <p>Puntaje IMDb: {{busqueda.puntaje}}</p>
+    <p>Generos: {{busqueda.generos}}</p>
+    <img src="{{busqueda.imagen}}" alt="" width="300" height="400">
+    <p>Direccion: {{busqueda.director}}</p>
+    <p>Casting: {{busqueda.casting}}</p>
+    <form action="" method="post">{% csrf_token %}
+        <input 
+            type="hidden"
+            name="temporada"
+            class="form-control"
+            placeholder="Numero de la temporada"
+            value="0">
+        <input 
+            type="hidden"
+            name="movie_id"
+            value="{{busqueda.id}}">
+        <button type="submit" class="btn btn-primary">Agregar</button>
+    </form>
+{% else %}
+    {# Muestra los datos de una serie #}
+    <p>{{busqueda.tipo.capitalize}}</p>
+    <p>{{busqueda.titulo}}</p>
+    <p>Año: {{busqueda.año}}</p>
+    <p>Duracion del Capitulo: {{busqueda.duracion}} minutos</p>
+    <p>Temporadas: {{busqueda.seasons}}</p>
+    <p>Puntaje IMDb: {{busqueda.puntaje}}</p>
+    <p>Generos: {{busqueda.generos}}</p>
+    <img src="{{busqueda.imagen}}" alt="" width="300" height="400">
+    <p>Casting: {{busqueda.casting}}</p>
+    <form action="" method="post">{% csrf_token %}
+        <label for="">Que temporada viste?</label>        
+        <input 
+            name="temporada"
+            class="form-control"
+            placeholder="Numero de la temporada">
+        <input 
+            type="hidden"
+            name="movie_id"
+            value="{{busqueda.id}}">
+            <br>
+        <button type="submit" class="btn btn-primary">Agregar</button>
+    </form>
+{% endif %}

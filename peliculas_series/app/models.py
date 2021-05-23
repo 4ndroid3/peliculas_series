@@ -19,13 +19,15 @@ class Serie(models.Model):
         help_text = 'Numero de la temporada',
         verbose_name = 'Temporada Numero',
     )
-    temporada_duracion = models.DurationField(
+    temporada_duracion = models.IntegerField(
         blank = True,
+        null=True,
         verbose_name = 'Duración',
         help_text = 'Tiempo de duracion de la temporada completa',
     )
     cant_cap = models.PositiveIntegerField(
         blank = True,
+        null=True,
         help_text = 'Cantidad de capitulos de la temporada',
         verbose_name = 'Cantidad de capitulos',
     )
@@ -75,7 +77,7 @@ class Tipo(models.Model):
         default=''
     )
     def __str__(self):
-        if self.id_pelicula != '':
+        if self.id_pelicula != None:
             return str(self.id_pelicula)
         else:
             return str(self.id_serie)

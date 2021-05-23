@@ -37,7 +37,7 @@ class ObtenerPeliculaSerie(TemplateView):
         try:
             busqueda = kwargs['movser']
             context = self.get_context_data(**kwargs)
-            context['busqueda'] = self.buscar_imdb(busqueda)            
+            context['busqueda'] = self.buscar_imdb(busqueda)   
         except:
             context = self.get_context_data(**kwargs)
         
@@ -63,26 +63,28 @@ class MostrarPeliculaSerie(FormView):
         for cast in search['cast'][0:5]: casting.append(cast['name'])
         casting = ', '.join(casting)
 
-        director = []
-        for dir in search['director'][0:5]: director.append(dir['name'])
-        director = ', '.join(director)
-
         # Cuando IMDB busca una serie, esta no 
         # tiene director, entonces se la separa con el IF.
-
+                
         if search['kind'] != 'movie':
             info_peli_serie = {
                 'tipo': search['kind'],
                 'titulo': search['title'],
                 'año': search['year'],
+                'duracion': search['runtimes'][0],
                 'puntaje': search['rating'],
-                'generos': search['genres'],
+                'generos': ', '.join(search['genres']),
                 'imagen': search['full-size cover url'],
-                'seasons': str(search['seasons']),
+                'seasons': str(search['number of seasons']),
                 'id': search.getID(),
                 'casting': casting,
             }
         else:
+
+            director = []
+            for dir in search['director'][0:5]: director.append(dir['name'])
+            director = ', '.join(director)
+
             info_peli_serie = {
                 'tipo': search['kind'],
                 'titulo': search['title'],
@@ -102,7 +104,7 @@ class MostrarPeliculaSerie(FormView):
         try:
             busqueda = kwargs['movser']
             context = self.get_context_data(**kwargs)
-            context['busqueda'] = self.traer_imdb(busqueda)            
+            context['busqueda'] = self.traer_imdb(busqueda)
         except:
             context = self.get_context_data(**kwargs)
         return self.render_to_response(context)
@@ -128,36 +130,45 @@ class MostrarPeliculaSerie(FormView):
         """
         ia = IMDb()
         peli_o_serie = ia.get_movie(form['movie_id'])
+
         # Si la peli / serie no está en la DB 
         # debo agregar todos los datos
-
-
         #import pdb; pdb.set_trace()
-
         try:
-            peli_en_db = Pelicula_Serie.objects.get(id_imdb=form['movie_id']).id_imdb
+            # En caso de ser una serie, hago un doble chekeo ya que las series
+            # las puedo agregar de nuevo para cargar una temporada
+            if form['temporada'] != 0: # si la temporada es 0, es una pelicula
+                peli_en_db = Pelicula_Serie.objects.get(
+                    pelicula_serie__id_serie__temporada_nro=form['temporada'],
+                    id_imdb=form['movie_id']
+                ).id_imdb
+            else:
+                peli_en_db = Pelicula_Serie.objects.get(
+                    id_imdb=form['movie_id']
+                ).id_imdb
         except:
             peli_en_db = ''
 
         if form['movie_id'] != peli_en_db:
-            # Busco director por director para ver si está en la DB
-            for director in peli_o_serie['director']:
-                try:
-                    persona_en_db = Persona.objects.get(id_imdb=director.getID()).id_imdb
-                except:
-                    persona_en_db = ''
+            
+            # Si es una pelicula tiene directores.
+            if peli_o_serie['kind'] == 'movie':
+                # Busco director por director para ver si está en la DB
+                for director in peli_o_serie['director']:
+                    try:
+                        persona_en_db = Persona.objects.get(id_imdb=director.getID()).id_imdb
+                    except:
+                        persona_en_db = ''
 
-                if director.getID() != persona_en_db:
-                    # La persona no se encuentra en la DB 
-                    # asique se la agrega
-                    agregar_persona = Persona(
-                        nombre_apellido=director['name'],
-                        director=True,
-                        id_imdb=director.getID()
-                    )
-                    agregar_persona.save()
-                else:
-                    print('La persona ya está en la DB')
+                    if director.getID() != persona_en_db:
+                        # La persona no se encuentra en la DB 
+                        # asique se la agrega
+                        agregar_persona = Persona(
+                            nombre_apellido=director['name'],
+                            director=True,
+                            id_imdb=director.getID()
+                        )
+                        agregar_persona.save()
             
             # Busco actor por actor para ver si está en la DB
             for actor in peli_o_serie['cast'][0:5]:
@@ -175,9 +186,7 @@ class MostrarPeliculaSerie(FormView):
                         id_imdb=actor.getID()
                     )
                     agregar_persona.save()
-                else:
-                    print('La persona ya está en la DB')
-
+                
             # Busco genero por genero para ver si está en la DB
             for genero in peli_o_serie['genres']:
                 try:
@@ -190,11 +199,10 @@ class MostrarPeliculaSerie(FormView):
                         tipo_genero= genero
                     )
                     agregar_genero.save()
-                else:
-                    print('El genero ya está en la DB')
-            
+                            
             # Agrego pelicula o serie a la DB
             if peli_o_serie['kind'] == 'movie':
+                # Si es una pelicula, agarra por esta rama
                 pelicula = Pelicula(duracion=peli_o_serie['runtime'][0])
                 pelicula.save()
 
@@ -208,35 +216,80 @@ class MostrarPeliculaSerie(FormView):
                 # Agrego la clase tipo pelicula
                 tipo = Tipo(id_pelicula=pelicula)
                 tipo.save()
+
+                # Agrego clase Pelicula_Serie a la DB
+                pelicula_serie = Pelicula_Serie(
+                    nombre=peli_o_serie['title'],
+                    pelicula_serie=tipo,
+                    año=peli_o_serie['year'],
+                    puntaje_imdb=peli_o_serie['rating'],
+                    img_portada=peli_o_serie['full-size cover url'],
+                    id_imdb=peli_o_serie.getID()
+                )
+
+                pelicula_serie.save()
+
+                # Agrego cada una de las personas del casting.
+                for casting_pelicula in peli_o_serie['cast'][0:5]:
+                    pelicula_serie.casting.add(Persona.objects.get(
+                            nombre_apellido=casting_pelicula
+                        )
+                    )
+                    pelicula_serie.save()
+                
+                # Agrego cada uno de los generos de la pelicula
+                for genero_pelicula in peli_o_serie['genres']:
+                    pelicula_serie.genero.add(Genero.objects.get(
+                            tipo_genero=genero_pelicula
+                        )
+                    )
+                    pelicula_serie.save()
             else:
-                print('es serie')
-            
-            # Agrego clase Pelicula_Serie a la DB
-            pelicula_serie = Pelicula_Serie(
-                nombre=peli_o_serie['title'],
-                pelicula_serie=tipo,
-                año=peli_o_serie['year'],
-                puntaje_imdb=peli_o_serie['rating'],
-                img_portada=peli_o_serie['full-size cover url'],
-                id_imdb=peli_o_serie.getID()
-            )
+                # Si es una serie, agarra por esta rama
 
-            pelicula_serie.save()
+                # Traigo los episodios desde IMDB
+                #ia.update(peli_o_serie,'episodes')
 
-            for casting_pelicula in peli_o_serie['cast'][0:5]:
                 #import pdb; pdb.set_trace()
-                pelicula_serie.casting.add(Persona.objects.get(
-                        nombre_apellido=casting_pelicula
-                    )
+                serie = Serie(
+                    temporada_nro=form['temporada'],
+                    #temporada_duracion=
+                        #int(peli_o_serie['runtimes'][0])*len(peli_o_serie['episodes'][form['temporada']]),
+                    #cant_cap=len(peli_o_serie['episodes'][form['temporada']])
                 )
-                pelicula_serie.save()
-            
-            for genero_pelicula in peli_o_serie['genres']:
-                pelicula_serie.genero.add(Genero.objects.get(
-                        tipo_genero=genero_pelicula
-                    )
+                serie.save()
+
+                # Agrego la clase tipo pelicula
+                tipo = Tipo(id_serie=serie)
+                tipo.save()
+
+                # Agrego clase Pelicula_Serie a la DB
+                pelicula_serie = Pelicula_Serie(
+                    nombre=peli_o_serie['title'],
+                    pelicula_serie=tipo,
+                    año=peli_o_serie['year'],
+                    puntaje_imdb=peli_o_serie['rating'],
+                    img_portada=peli_o_serie['full-size cover url'],
+                    id_imdb=peli_o_serie.getID()
                 )
+
                 pelicula_serie.save()
 
+                # Agrego cada una de las personas del casting.
+                for casting_serie in peli_o_serie['cast'][0:5]:
+                    pelicula_serie.casting.add(Persona.objects.get(
+                            nombre_apellido=casting_serie
+                        )
+                    )
+                    pelicula_serie.save()
+    
+                # Agrego cada uno de los generos de la serie
+                for genero_serie in peli_o_serie['genres']:
+                    pelicula_serie.genero.add(Genero.objects.get(
+                            tipo_genero=genero_serie
+                        )
+                    )
+                    pelicula_serie.save()
+            
         else:
             print('La Pelicula ya está agregada a la BD')
