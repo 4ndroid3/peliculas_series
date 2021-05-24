@@ -32,6 +32,9 @@ class Serie(models.Model):
         verbose_name = 'Cantidad de capitulos',
     )
 
+    def __str__(self):
+        return str(self.temporada_nro)
+
     class Meta:
         verbose_name = 'Serie'
         verbose_name_plural = 'Series'
@@ -40,8 +43,8 @@ class Pelicula(models.Model):
     """ Modelo que maneja el ingreso de peliculas a la DB 
     
     Campos:
-    - duracion: time
-    - director: FK
+    - duracion: charfield
+    - director: manytomanyfield
     """
     director = models.ManyToManyField(
         Persona,
@@ -78,9 +81,9 @@ class Tipo(models.Model):
     )
     def __str__(self):
         if self.id_pelicula != None:
-            return str(self.id_pelicula)
+            return ''
         else:
-            return str(self.id_serie)
+            return 'Season: ' + str(self.id_serie)
 
 class Genero(models.Model):
     tipo_genero= models.CharField(
@@ -109,8 +112,8 @@ class Pelicula_Serie(models.Model):
     - pelicula_serie: FK
     - año: int
     - puntaje_imdb: float
-    - genero: char
-    - casting: FK
+    - genero: manytomanyfield
+    - casting: manytomanyfield
     - img_portada: image
     - id_imdb
     """
@@ -171,7 +174,7 @@ class Pelicula_Serie(models.Model):
     )
 
     def __str__(self):
-        return str(self.nombre)
+            return str(self.nombre)
     
     class Meta:
         verbose_name = 'Pelicula o Serie'

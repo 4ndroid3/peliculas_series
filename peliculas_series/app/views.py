@@ -26,11 +26,19 @@ class ObtenerPeliculaSerie(TemplateView):
         ia = IMDb()
         search = ia.search_movie(peli_serie)[0:14]
         list_search = []
-        for x in search:
-            try:
-                list_search += [[x['title'], x['year'], x['cover url'], x.getID()]]
-            except:
-                list_search += [['Error en IMDB']]
+        for peli_o_serie in search:
+            if (peli_o_serie['kind'] =='tv series') or (peli_o_serie['kind'] == 'movie'):
+                try:
+                    list_search += [
+                        [peli_o_serie['title'], 
+                        peli_o_serie['year'], 
+                        peli_o_serie['cover url'], 
+                        peli_o_serie.getID()]
+                    ]
+                except:
+                    list_search += [
+                        ['Error en IMDB']
+                    ]
         return list_search
     
     def get(self, request, *args, **kwargs):
@@ -39,6 +47,7 @@ class ObtenerPeliculaSerie(TemplateView):
             context = self.get_context_data(**kwargs)
             context['busqueda'] = self.buscar_imdb(busqueda)   
         except:
+            #import pdb; pdb.set_trace()
             context = self.get_context_data(**kwargs)
         
         return self.render_to_response(context)

@@ -7,7 +7,7 @@ from django.contrib import admin
 from .models import Pelicula_Serie, Tipo, Pelicula, Serie, Genero
 
 class CustomPeliculaSerieAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'año', 'puntaje_imdb',)
+    list_display = ('nombre','pelicula_serie', 'año', 'puntaje_imdb',)
     list_filter = ('nombre',)
 
 class CustomTipoAdmin(admin.ModelAdmin):
