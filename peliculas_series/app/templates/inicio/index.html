@@ -1,10 +1,14 @@
+<form action="." type="get">
+   <label for="">Buscar:</label>
+   <input type="search" placeholder="Nombre Pelicula/Serie">
+   <button type="submit">Buscar</button>
+</form>
 
 {% for x in busqueda %}
-<a href="../movies/{{x.3}}">
-<p>
-   {{x.0}} - {{x.1}}
-</p>    
-</a>
-<img src="{{x.2}}" alt="">
-
+   <a href="../movies/{{x.3}}">
+   <p>
+      {{x.0}} - {{x.1}}
+   </p>    
+   </a>
+   <img src="{{x.2}}" alt="">
 {% endfor %}

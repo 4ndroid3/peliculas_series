@@ -16,7 +16,9 @@ from imdb import IMDb ,IMDbError
 
 class ObtenerPeliculaSerie(TemplateView):
     """ Clase principal para busqueda de peliculas o series
-    y luego agregarlas a la db como vistas.
+    esta tiene una funcion principal 'buscar_imdb' que realiza
+    las busquedas con la API de IMDb, luego devuelve con un get
+    lo encontrado, filtrando solo las peliculas y las series.
     """
     template_name = 'inicio/index.html'
 
@@ -26,8 +28,12 @@ class ObtenerPeliculaSerie(TemplateView):
         ia = IMDb()
         search = ia.search_movie(peli_serie)[0:14]
         list_search = []
+
+        # Search me devuelve todas las peliculas encontradas en IMDB
         for peli_o_serie in search:
-            if (peli_o_serie['kind'] =='tv series') or (peli_o_serie['kind'] == 'movie'):
+
+            # Filtro para que solo me muestre series y peliculas
+            if (peli_o_serie['kind']=='tv series') or (peli_o_serie['kind']=='movie'):
                 try:
                     list_search += [
                         [peli_o_serie['title'], 
@@ -43,18 +49,23 @@ class ObtenerPeliculaSerie(TemplateView):
     
     def get(self, request, *args, **kwargs):
         try:
+
+            import pdb; pdb.set_trace()
             busqueda = kwargs['movser']
             context = self.get_context_data(**kwargs)
             context['busqueda'] = self.buscar_imdb(busqueda)   
         except:
-            #import pdb; pdb.set_trace()
             context = self.get_context_data(**kwargs)
         
         return self.render_to_response(context)
 
 class MostrarPeliculaSerie(FormView):
-    """ Al seleccionar una pelicula de la lista dada en ObtenerPeliculaSerie
-    muestra la informacion completa de la pelicula"""
+    """ Al seleccionar una pelicula de la lista dada
+    en 'ObtenerPeliculaSerie' muestra la informacion completa de la pelicula,
+    con la funcion 'traer_imdb' que se llama en el 'get' me muestra una 
+    pelicula/serie seleccionada y luego en el 'post' llama a la funcion
+    'agregar_pelicula_serie' que realiza el agregado de informacion a la DB"""
+
     template_name = 'inicio/movie_info.html'
     form_class = SeleccionarMovieForm
     success_url = '/'
@@ -66,15 +77,13 @@ class MostrarPeliculaSerie(FormView):
         search = ia.get_movie(id_peli_serie)
 
         # Armo una lista con los Objetos Persona, luego los paso 
-        # a str para poder presentarlos en el Template, de casting
-        # y director
+        # a str para poder presentarlos en el Template de casting
         casting = []
         for cast in search['cast'][0:5]: casting.append(cast['name'])
         casting = ', '.join(casting)
 
         # Cuando IMDB busca una serie, esta no 
         # tiene director, entonces se la separa con el IF.
-                
         if search['kind'] != 'movie':
             info_peli_serie = {
                 'tipo': search['kind'],
@@ -89,7 +98,8 @@ class MostrarPeliculaSerie(FormView):
                 'casting': casting,
             }
         else:
-
+            # Armo una lista con los Objetos Persona, luego los paso 
+            # a str para poder presentarlos en el template de director
             director = []
             for dir in search['director'][0:5]: director.append(dir['name'])
             director = ', '.join(director)
@@ -135,8 +145,12 @@ class MostrarPeliculaSerie(FormView):
     def agregar_pelicula_serie(self, form):
         """
         Recibo el ID de la pelicula dsde el form del front.
-        Con el ID busco toda la informacion que va a ir a la DB
-        """
+        Con el ID busco toda la informacion que va a ir a la DB,
+        primero compruebo de que no esté en la DB, si no está
+        procedo a ir agregando los datos, filtrandolos de acuerdo
+        si están en la DB o no, una vez comprobado los datos, los
+        agrego en las vistas del usuario que esté logueado."""
+
         ia = IMDb()
         peli_o_serie = ia.get_movie(form['movie_id'])
 
@@ -255,11 +269,8 @@ class MostrarPeliculaSerie(FormView):
                     pelicula_serie.save()
             else:
                 # Si es una serie, agarra por esta rama
-
                 # Traigo los episodios desde IMDB
                 #ia.update(peli_o_serie,'episodes')
-
-                #import pdb; pdb.set_trace()
                 serie = Serie(
                     temporada_nro=form['temporada'],
                     #temporada_duracion=
