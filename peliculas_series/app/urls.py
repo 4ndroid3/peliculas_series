@@ -6,18 +6,13 @@ from .views import ObtenerPeliculaSerie, MostrarPeliculaSerie
 
 urlpatterns = [
     path(
-        route = '',
-        view = ObtenerPeliculaSerie.as_view(),
-        name = 'index',
+        route='',
+        view=ObtenerPeliculaSerie.as_view(),
+        name='index',
     ),
     path(
-        route = '<movser>/',
-        view = ObtenerPeliculaSerie.as_view(),
-        name = 'index',
-    ),
-    path(
-        route = 'movies/<movser>/',
-        view = MostrarPeliculaSerie.as_view(),
-        name = 'movie_serie',
+        route='movies/<movser>/',
+        view=MostrarPeliculaSerie.as_view(),
+        name='movie_serie',
     ),
 ]

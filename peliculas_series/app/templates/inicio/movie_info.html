@@ -1,3 +1,7 @@
+<a href="/" type="button">
+    <button>Home</button>
+</a>
+
 {% if busqueda.tipo|length < 9 %}
     {# Muestra los datos de una pelicula #}
     <p>{{busqueda.tipo.capitalize}}</p>
@@ -20,6 +24,20 @@
             type="hidden"
             name="movie_id"
             value="{{busqueda.id}}">
+        <label for="">Fecha Vista</label>
+        <input
+            type="date"
+            name="fecha_vista"
+            class="form-control"
+            placeholder="Ej: 28/10/1990">
+        <br>
+        <label for="res">Reseña</label>
+        <textarea 
+            id="res"
+            name="review"
+            class="form-control"
+            placeholder="Breve reseña de lo visto">Reseña</textarea>
+        <br>
         <button type="submit" class="btn btn-primary">Agregar</button>
     </form>
 {% else %}
@@ -43,7 +61,21 @@
             type="hidden"
             name="movie_id"
             value="{{busqueda.id}}">
-            <br>
+        <br>
+        <label for="">Fecha Vista</label>
+        <input
+            type="date"
+            name="fecha_vista"
+            class="form-control"
+            placeholder="Ej: 28/10/1990">
+        <br>
+        <label for="res">Reseña</label>
+        <textarea 
+            id="res"
+            name="review"
+            class="form-control"
+            placeholder="Breve reseña de lo visto">Reseña</textarea>
+        <br>
         <button type="submit" class="btn btn-primary">Agregar</button>
     </form>
 {% endif %}

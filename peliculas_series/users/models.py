@@ -7,6 +7,7 @@ from django.contrib.auth.models import AbstractUser
 # Project Imports
 from app.models import Pelicula_Serie
 
+
 class User(AbstractUser):
     """User Model Modificado
     Se extiende de la clase AbstractUser para agregar nuevas funcionalidades
@@ -18,29 +19,31 @@ class User(AbstractUser):
 
     email = models.EmailField(
         unique=True,
-        error_messages = {
-            'Unico' : 'Ya existe un usuario con esa dirección de Email'
+        error_messages={
+            'Unico': 'Ya existe un usuario con esa dirección de Email'
         },
     )
 
-    # USERNAME_FIELD me idica que el campo email ahora me lo va a pedir para iniciar sesion.
+    # USERNAME_FIELD me idica que el campo email ahora
+    # me lo va a pedir para iniciar sesion.
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
     is_verified = models.BooleanField(
         'verified',
-        default = True,
-        help_text = 'True cuando el usuario verifico su cuenta vía email.'
+        default=True,
+        help_text='True cuando el usuario verifico su cuenta vía email.'
     )
 
     def __str__(self):
         return str(self.username)
 
+
 class Profile(models.Model):
     """Profile Model.
-    Informacion informal del usuario, 
+    Informacion informal del usuario,
     contiene un perfil con imagen, estadisticas y datos adicionales.
-
     Campos:
     - id_users: OneToOne
     - biografia: text
@@ -51,52 +54,52 @@ class Profile(models.Model):
     """
     id_users = models.OneToOneField(
         User,
-        on_delete = models.CASCADE,
-        help_text = 'Nombre del Usuario',
-        verbose_name = 'Usuario',
+        on_delete=models.CASCADE,
+        help_text='Nombre del Usuario',
+        verbose_name='Usuario',
     )
     biografia = models.TextField(
-        max_length = 500,
+        max_length=500,
         blank=True,
-        help_text = 'Breve resumen acerca tuyo',
-        verbose_name = 'Biografía',
+        help_text='Breve resumen acerca tuyo',
+        verbose_name='Biografía',
     )
     nacimiento = models.DateField(
-        blank = True,
+        blank=True,
         null=True,
-        verbose_name = 'Fecha de Nacimiento',
-        help_text = 'Fecha en la que nació',
+        verbose_name='Fecha de Nacimiento',
+        help_text='Fecha en la que nació',
     )
     img_perfil = models.ImageField(
-        upload_to = 'profile_img', 
-        blank = True,
+        upload_to='profile_img',
+        blank=True,
         null=True,
-        help_text = 'Imagen de perfil del usuario',
-        verbose_name = 'Imagen de Perfil',
+        help_text='Imagen de perfil del usuario',
+        verbose_name='Imagen de Perfil',
     )
-    
+
     # Stats
     peliculas_reg = models.PositiveIntegerField(
-        default=0, 
-        help_text = 'Cantidad de peliculas vistas',
-        verbose_name = 'Peliculas vistas',
+        default=0,
+        help_text='Cantidad de peliculas vistas',
+        verbose_name='Peliculas vistas',
     )
     series_reg = models.PositiveIntegerField(
         default=0,
-        help_text = 'Cantidad de series vistas',
-        verbose_name = 'Series vistas'
+        help_text='Cantidad de series vistas',
+        verbose_name='Series vistas'
     )
 
     def __str__(self):
         return str(self.id_users)
-    
+
     class Meta:
         verbose_name = 'Perfil'
         verbose_name_plural = 'Perfiles'
 
+
 class Vista(models.Model):
     """ Registro de las peliculas / series vistas por el usuario
-
     Campos:
     - id_profile: FK
     - id_pelicula_serie: FK
@@ -105,32 +108,32 @@ class Vista(models.Model):
     """
     id_profile = models.ForeignKey(
         Profile,
-        on_delete = models.CASCADE,
-        help_text = 'Nombre del Perfil',
-        verbose_name = 'Nombre de Perfil',
+        on_delete=models.CASCADE,
+        help_text='Nombre del Perfil',
+        verbose_name='Nombre de Perfil',
     )
     id_pelicula_serie = models.ForeignKey(
         Pelicula_Serie,
-        on_delete = models.CASCADE,
-        help_text = 'Nombre de la pelicula vista',
-        verbose_name = 'Nombre Pelicula / Serie',
+        on_delete=models.CASCADE,
+        help_text='Nombre de la pelicula vista',
+        verbose_name='Nombre Pelicula / Serie',
     )
     fecha_vista = models.DateField(
-        blank = True,
+        blank=True,
         null=True,
-        verbose_name = 'Visto el',
-        help_text = 'Fecha en la que se vió la pelicula',
+        verbose_name='Visto el',
+        help_text='Fecha en la que se vió la pelicula',
     )
     review = models.TextField(
-        max_length = 500,
+        max_length=500,
         blank=True,
-        help_text = 'Breve resumen de la pelicula',
-        verbose_name = 'Resumen',
+        help_text='Breve resumen de la pelicula',
+        verbose_name='Resumen',
     )
 
     def __str__(self):
         return str(self.id_pelicula_serie)
-    
+
     class Meta:
         verbose_name = 'Vista'
         verbose_name_plural = 'Vistas'

@@ -7,6 +7,7 @@ from django.contrib.auth.admin import UserAdmin
 # Project Imports
 from .models import User, Profile, Vista
 
+
 class CustomUserAdmin(UserAdmin):
     """Configuración del admin modificado"""
 
@@ -16,12 +17,14 @@ class CustomUserAdmin(UserAdmin):
 
 class CustomProfileAdmin(admin.ModelAdmin):
     """ Configuracion de Muestra de Profiles en Admin"""
-    list_display = ('id_users','peliculas_reg', 'series_reg',)
+    list_display = ('id_users', 'peliculas_reg', 'series_reg',)
+
 
 class CustomVistaAdmin(admin.ModelAdmin):
     """ Configuracion de Muestra de Vista de peliculas / series en el admin """
     list_display = ('id_profile', 'id_pelicula_serie', 'fecha_vista',)
     list_filter = ('id_profile', )
+
 
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Profile, CustomProfileAdmin)

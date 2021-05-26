@@ -1,6 +1,5 @@
 # Django Imports
 from django import forms
-from django.forms.widgets import HiddenInput
 
 
 class SeleccionarMovieForm(forms.Form):
@@ -8,17 +7,34 @@ class SeleccionarMovieForm(forms.Form):
     y agregarla junto con sus datos a la DB """
     movie_id = forms.CharField(
         widget=forms.HiddenInput(
-            attrs= {
-                'value':'',
+            attrs={
+                'value': '',
             }
         )
     )
     temporada = forms.IntegerField(
         widget=forms.NumberInput(
-            attrs= {
+            attrs={
                 'class': 'form-control',
                 'placeholder': 'Numero de la temporada',
                 'value': "0",
+            }
+        )
+    )
+    fecha_vista = forms.DateField(
+        widget=forms.DateInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Ej: 28/10/1990',
+            }
+        )
+    )
+    review = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Breve reseña de lo visto',
+                'value': 'reseña'
             }
         )
     )

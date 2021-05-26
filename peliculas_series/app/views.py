@@ -1,7 +1,6 @@
 """ Views de la app principal """
 
 # Django Imports
-from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.views.generic import FormView
 
@@ -12,7 +11,8 @@ from personas.models import Persona
 from .forms import SeleccionarMovieForm
 
 # IMDB Imports
-from imdb import IMDb ,IMDbError
+from imdb import IMDb, IMDbError
+
 
 class ObtenerPeliculaSerie(TemplateView):
     """ Clase principal para busqueda de peliculas o series
@@ -33,36 +33,38 @@ class ObtenerPeliculaSerie(TemplateView):
         for peli_o_serie in search:
 
             # Filtro para que solo me muestre series y peliculas
-            if (peli_o_serie['kind']=='tv series') or (peli_o_serie['kind']=='movie'):
+            if (peli_o_serie['kind'] == 'tv series') or (peli_o_serie['kind'] == 'movie'):
                 try:
                     list_search += [
-                        [peli_o_serie['title'], 
-                        peli_o_serie['year'], 
-                        peli_o_serie['cover url'], 
-                        peli_o_serie.getID()]
+                        [
+                            peli_o_serie['title'],
+                            peli_o_serie['year'],
+                            peli_o_serie['cover url'],
+                            peli_o_serie.getID()
+                        ]
                     ]
                 except:
                     list_search += [
                         ['Error en IMDB']
                     ]
         return list_search
-    
-    def get(self, request, *args, **kwargs):
-        try:
 
-            import pdb; pdb.set_trace()
-            busqueda = kwargs['movser']
+    def get(self, request, *args, **kwargs):
+        # import pdb; pdb.set_trace()
+        try:
+            busqueda = request.GET['search']
             context = self.get_context_data(**kwargs)
-            context['busqueda'] = self.buscar_imdb(busqueda)   
+            context['busqueda'] = self.buscar_imdb(busqueda)
         except:
             context = self.get_context_data(**kwargs)
         
         return self.render_to_response(context)
 
+
 class MostrarPeliculaSerie(FormView):
     """ Al seleccionar una pelicula de la lista dada
     en 'ObtenerPeliculaSerie' muestra la informacion completa de la pelicula,
-    con la funcion 'traer_imdb' que se llama en el 'get' me muestra una 
+    con la funcion 'traer_imdb' que se llama en el 'get' me muestra una
     pelicula/serie seleccionada y luego en el 'post' llama a la funcion
     'agregar_pelicula_serie' que realiza el agregado de informacion a la DB"""
 
@@ -71,25 +73,32 @@ class MostrarPeliculaSerie(FormView):
     success_url = '/'
 
     def traer_imdb(self, id_peli_serie):
-        """ funcion que trae una pelicula/serie cuando 
+        """ funcion que trae una pelicula/serie cuando
         se le pasa como parametro un numero de ID"""
         ia = IMDb()
         search = ia.get_movie(id_peli_serie)
 
-        # Armo una lista con los Objetos Persona, luego los paso 
+        # Armo una lista con los Objetos Persona, luego los paso
         # a str para poder presentarlos en el Template de casting
         casting = []
         for cast in search['cast'][0:5]: casting.append(cast['name'])
         casting = ', '.join(casting)
 
-        # Cuando IMDB busca una serie, esta no 
+        # Hay algunas series que no tienen
+        # 'runtimes' entonces atrapo el error.
+        try:
+            duracion = search['runtimes'][0]
+        except KeyError:
+            duracion = ''
+
+        # Cuando IMDB busca una serie, esta no
         # tiene director, entonces se la separa con el IF.
         if search['kind'] != 'movie':
             info_peli_serie = {
                 'tipo': search['kind'],
                 'titulo': search['title'],
                 'año': search['year'],
-                'duracion': search['runtimes'][0],
+                'duracion': duracion,
                 'puntaje': search['rating'],
                 'generos': ', '.join(search['genres']),
                 'imagen': search['full-size cover url'],
@@ -98,7 +107,7 @@ class MostrarPeliculaSerie(FormView):
                 'casting': casting,
             }
         else:
-            # Armo una lista con los Objetos Persona, luego los paso 
+            # Armo una lista con los Objetos Persona, luego los paso
             # a str para poder presentarlos en el template de director
             director = []
             for dir in search['director'][0:5]: director.append(dir['name'])
@@ -116,7 +125,7 @@ class MostrarPeliculaSerie(FormView):
                 'id': search.getID(),
                 'casting': casting,
             }
-
+        
         return info_peli_serie
 
     def get(self, request, *args, **kwargs):
@@ -135,14 +144,13 @@ class MostrarPeliculaSerie(FormView):
         """
         form = self.get_form()
         if form.is_valid():
-            self.agregar_pelicula_serie(form.cleaned_data)
+            self.agregar_pelicula_serie(request, form.cleaned_data)
             return self.form_valid(form)
         else:
             print('invalid form')
             return self.form_invalid(form)
-
     
-    def agregar_pelicula_serie(self, form):
+    def agregar_pelicula_serie(self, request, form):
         """
         Recibo el ID de la pelicula dsde el form del front.
         Con el ID busco toda la informacion que va a ir a la DB,
@@ -154,13 +162,12 @@ class MostrarPeliculaSerie(FormView):
         ia = IMDb()
         peli_o_serie = ia.get_movie(form['movie_id'])
 
-        # Si la peli / serie no está en la DB 
+        # Si la peli / serie no está en la DB
         # debo agregar todos los datos
-        #import pdb; pdb.set_trace()
         try:
             # En caso de ser una serie, hago un doble chekeo ya que las series
             # las puedo agregar de nuevo para cargar una temporada
-            if form['temporada'] != 0: # si la temporada es 0, es una pelicula
+            if form['temporada'] != 0:  # si la temporada es 0, es una pelicula
                 peli_en_db = Pelicula_Serie.objects.get(
                     pelicula_serie__id_serie__temporada_nro=form['temporada'],
                     id_imdb=form['movie_id']
@@ -173,18 +180,19 @@ class MostrarPeliculaSerie(FormView):
             peli_en_db = ''
 
         if form['movie_id'] != peli_en_db:
-            
             # Si es una pelicula tiene directores.
             if peli_o_serie['kind'] == 'movie':
                 # Busco director por director para ver si está en la DB
                 for director in peli_o_serie['director']:
                     try:
-                        persona_en_db = Persona.objects.get(id_imdb=director.getID()).id_imdb
+                        persona_en_db = Persona.objects.get(
+                            id_imdb=director.getID()
+                        ).id_imdb
                     except:
                         persona_en_db = ''
 
                     if director.getID() != persona_en_db:
-                        # La persona no se encuentra en la DB 
+                        # La persona no se encuentra en la DB
                         # asique se la agrega
                         agregar_persona = Persona(
                             nombre_apellido=director['name'],
@@ -192,16 +200,17 @@ class MostrarPeliculaSerie(FormView):
                             id_imdb=director.getID()
                         )
                         agregar_persona.save()
-            
             # Busco actor por actor para ver si está en la DB
             for actor in peli_o_serie['cast'][0:5]:
                 try:
-                    persona_en_db = Persona.objects.get(id_imdb=actor.getID()).id_imdb
+                    persona_en_db = Persona.objects.get(
+                        id_imdb=actor.getID()
+                    ).id_imdb
                 except:
                     persona_en_db = ''
 
                 if actor.getID() != persona_en_db:
-                    # La persona no se encuentra en la DB 
+                    # La persona no se encuentra en la DB
                     # asique se la agrega
                     agregar_persona = Persona(
                         nombre_apellido=actor['name'],
@@ -209,20 +218,20 @@ class MostrarPeliculaSerie(FormView):
                         id_imdb=actor.getID()
                     )
                     agregar_persona.save()
-                
             # Busco genero por genero para ver si está en la DB
             for genero in peli_o_serie['genres']:
                 try:
-                    genero_en_db = Genero.objects.get(tipo_genero=genero).tipo_genero
+                    genero_en_db = Genero.objects.get(
+                        tipo_genero=genero
+                    ).tipo_genero
                 except:
                     genero_en_db = ''
 
                 if genero != genero_en_db:
                     agregar_genero = Genero(
-                        tipo_genero= genero
+                        tipo_genero=genero
                     )
                     agregar_genero.save()
-                            
             # Agrego pelicula o serie a la DB
             if peli_o_serie['kind'] == 'movie':
                 # Si es una pelicula, agarra por esta rama
@@ -235,7 +244,6 @@ class MostrarPeliculaSerie(FormView):
                         )
                     )
                     pelicula.save()
-                
                 # Agrego la clase tipo pelicula
                 tipo = Tipo(id_pelicula=pelicula)
                 tipo.save()
@@ -259,7 +267,6 @@ class MostrarPeliculaSerie(FormView):
                         )
                     )
                     pelicula_serie.save()
-                
                 # Agrego cada uno de los generos de la pelicula
                 for genero_pelicula in peli_o_serie['genres']:
                     pelicula_serie.genero.add(Genero.objects.get(
@@ -270,12 +277,12 @@ class MostrarPeliculaSerie(FormView):
             else:
                 # Si es una serie, agarra por esta rama
                 # Traigo los episodios desde IMDB
-                #ia.update(peli_o_serie,'episodes')
+                # ia.update(peli_o_serie,'episodes')
                 serie = Serie(
                     temporada_nro=form['temporada'],
-                    #temporada_duracion=
-                        #int(peli_o_serie['runtimes'][0])*len(peli_o_serie['episodes'][form['temporada']]),
-                    #cant_cap=len(peli_o_serie['episodes'][form['temporada']])
+                    # temporada_duracion=
+                        # int(peli_o_serie['runtimes'][0])*len(peli_o_serie['episodes'][form['temporada']]),
+                    # cant_cap=len(peli_o_serie['episodes'][form['temporada']])
                 )
                 serie.save()
 
@@ -302,7 +309,6 @@ class MostrarPeliculaSerie(FormView):
                         )
                     )
                     pelicula_serie.save()
-    
                 # Agrego cada uno de los generos de la serie
                 for genero_serie in peli_o_serie['genres']:
                     pelicula_serie.genero.add(Genero.objects.get(
@@ -310,6 +316,23 @@ class MostrarPeliculaSerie(FormView):
                         )
                     )
                     pelicula_serie.save()
-            
+        
+        # Agrego la pelicula vista al usuario logueado
+        usuario_logueado = Profile.objects.get(id_users=request.user)
+
+        if form['temporada'] == 0:
+            pelicula_serie_vista = Pelicula_Serie.objects.get(id_imdb=form['movie_id'])
         else:
-            print('La Pelicula ya está agregada a la BD')
+            pelicula_serie_vista = Pelicula_Serie.objects.get(
+                pelicula_serie__id_serie__temporada_nro=form['temporada'],
+                id_imdb=form['movie_id']
+            )
+
+        registrar_vista = Vista(
+            id_profile=usuario_logueado,
+            id_pelicula_serie=pelicula_serie_vista,
+            fecha_vista=str(form['fecha_vista']),
+            review=form['review']
+        )
+        registrar_vista.save()
+        
