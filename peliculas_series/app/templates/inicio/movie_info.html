@@ -53,10 +53,13 @@
     <p>Casting: {{busqueda.casting}}</p>
     <form action="" method="post">{% csrf_token %}
         <label for="">Que temporada viste?</label>        
-        <input 
+        <input
+            type="number"
             name="temporada"
             class="form-control"
-            placeholder="Numero de la temporada">
+            placeholder="Numero de la temporada"
+            min="1"
+            max="{{busqueda.seasons}}">
         <input 
             type="hidden"
             name="movie_id"
@@ -67,6 +70,7 @@
             type="date"
             name="fecha_vista"
             class="form-control"
+            required
             placeholder="Ej: 28/10/1990">
         <br>
         <label for="res">Reseña</label>

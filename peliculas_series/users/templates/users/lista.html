@@ -1,0 +1,7 @@
+{% extends "inicio/base.html" %}
+{% load static %}
+{% block content %}
+{% for vista in object_list %}
+<p>{{vista}} - {{vista.fecha_vista}} - {{vista.pk}}</p>
+{% endfor %}
+{% endblock %}

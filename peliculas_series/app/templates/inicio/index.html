@@ -1,16 +1,20 @@
-<h1>Busqueda de Peliculas y Series en IMDb</h1>
+{% extends "inicio/base.html" %}
+{% load static %}
+{% block content %}
+   <div>
+      <form action="." type="get">
+         <label for="">Buscar:</label>
+         <input type="search" name="search" placeholder="Nombre Pelicula/Serie" autofocus>
+         <button type="submit">Buscar</button>
+      </form>
 
-<form action="." type="get">
-   <label for="">Buscar:</label>
-   <input type="search" name="search" placeholder="Nombre Pelicula/Serie" autofocus>
-   <button type="submit">Buscar</button>
-</form>
-
-{% for x in busqueda %}
-   <a href="../movies/{{x.3}}">
-   <p>
-      {{x.0}} - {{x.1}}
-   </p>    
-   </a>
-   <img src="{{x.2}}" alt="">
-{% endfor %}
+      {% for x in busqueda %}
+         <a href="../movies/{{x.3}}">
+         <p>
+            {{x.0}} - {{x.1}}
+         </p>    
+         </a>
+         <img src="{{x.2}}" alt="">
+      {% endfor %}
+   </div>
+{% endblock %}
