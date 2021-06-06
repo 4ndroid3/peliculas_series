@@ -25,16 +25,17 @@ class SeleccionarMovieForm(forms.Form):
         widget=forms.DateInput(
             attrs={
                 'class': 'form-control',
+                'type': 'date',
                 'placeholder': 'Ej: 28/10/1990',
             }
         )
     )
     review = forms.CharField(
-        widget=forms.TextInput(
+        required=False,
+        widget=forms.Textarea(
             attrs={
                 'class': 'form-control',
                 'placeholder': 'Breve reseña de lo visto',
-                'value': 'reseña'
             }
         )
     )

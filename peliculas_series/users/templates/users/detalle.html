@@ -1,5 +1,14 @@
 {% extends "inicio/base.html" %}
 {% load static %}
 {% block content %}
-<p>{{object}}</p>
+<a href="javascript: history.go(-1)">Volver</a>
+<p>Nombre: {{object}}</p>
+<p>Vista el: {{object.fecha_vista}}</p>
+<p>Review: {{object.review}}</p>
+<p>Año: {{object.id_pelicula_serie.año}}</p>
+<p>Puntaje IMDb: {{object.id_pelicula_serie.puntaje_imdb}}</p>
+<p>Generos: {{object.id_pelicula_serie.genero.all|join:", "}}</p>
+<p>Casting: {{object.id_pelicula_serie.casting.all|join:", "}}</p>
+<img src="{{object.id_pelicula_serie.img_portada}}" width="300" height="400"alt="">
+
 {% endblock %}

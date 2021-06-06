@@ -2,7 +2,7 @@
 from django.urls import path
 
 # Project Imports
-from .views import MostrarPerfilUsuario, MostrarViewsUsuario, DetallePeliculaSerie
+from .views import MostrarPerfilUsuario, MostrarViewsUsuario, DetallePeliculaSerie, MostrarEstadisticaUsuario
 
 urlpatterns = [
     path(
@@ -18,6 +18,11 @@ urlpatterns = [
     path(
         route='perfil/vistas/<int:pk>',
         view=DetallePeliculaSerie.as_view(),
+        name='detail',
+    ),
+    path(
+        route='perfil/estadisticas/',
+        view=MostrarEstadisticaUsuario.as_view(),
         name='detail',
     ),
 ]

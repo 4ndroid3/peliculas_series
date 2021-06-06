@@ -126,7 +126,8 @@ class Vista(models.Model):
     )
     review = models.TextField(
         max_length=500,
-        blank=True,
+        default=' ',
+        null=True,
         help_text='Breve resumen de la pelicula',
         verbose_name='Resumen',
     )

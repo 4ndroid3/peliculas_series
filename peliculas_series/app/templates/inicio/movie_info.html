@@ -16,29 +16,16 @@
     <form action="" method="post">{% csrf_token %}
         <input 
             type="hidden"
-            name="temporada"
-            class="form-control"
-            placeholder="Numero de la temporada"
-            value="0">
-        <input 
-            type="hidden"
             name="movie_id"
             value="{{busqueda.id}}">
-        <label for="">Fecha Vista</label>
-        <input
-            type="date"
-            name="fecha_vista"
-            class="form-control"
-            placeholder="Ej: 28/10/1990">
+        <input 
+            type="hidden"
+            name="temporada"
+            value="0">
+        {{form.fecha_vista.label_tag}} {{form.fecha_vista}} <br>
+        {{form.review.label_tag}}<br>{{form.review}}
         <br>
-        <label for="res">Reseña</label>
-        <textarea 
-            id="res"
-            name="review"
-            class="form-control"
-            placeholder="Breve reseña de lo visto">Reseña</textarea>
-        <br>
-        <button type="submit" class="btn btn-primary">Agregar</button>
+        <input type="submit" value="Agregar">
     </form>
 {% else %}
     {# Muestra los datos de una serie #}
@@ -52,34 +39,14 @@
     <img src="{{busqueda.imagen}}" alt="" width="300" height="400">
     <p>Casting: {{busqueda.casting}}</p>
     <form action="" method="post">{% csrf_token %}
-        <label for="">Que temporada viste?</label>        
-        <input
-            type="number"
-            name="temporada"
-            class="form-control"
-            placeholder="Numero de la temporada"
-            min="1"
-            max="{{busqueda.seasons}}">
         <input 
             type="hidden"
             name="movie_id"
             value="{{busqueda.id}}">
+        <p>{{form.temporada.label_tag}} {{form.temporada}}</p>
+        <p>{{form.fecha_vista.label_tag}} {{form.fecha_vista}}</p>
+        <p>{{form.review.label_tag}}<br>{{form.review}}</p>
         <br>
-        <label for="">Fecha Vista</label>
-        <input
-            type="date"
-            name="fecha_vista"
-            class="form-control"
-            required
-            placeholder="Ej: 28/10/1990">
-        <br>
-        <label for="res">Reseña</label>
-        <textarea 
-            id="res"
-            name="review"
-            class="form-control"
-            placeholder="Breve reseña de lo visto">Reseña</textarea>
-        <br>
-        <button type="submit" class="btn btn-primary">Agregar</button>
+        <input type="submit" value="Agregar">
     </form>
 {% endif %}

@@ -2,6 +2,6 @@
 {% load static %}
 {% block content %}
 {% for vista in object_list %}
-<p>{{vista}} - {{vista.fecha_vista}} - {{vista.pk}}</p>
+<p>{{vista}} - {{vista.fecha_vista}} | <a href="vistas/{{vista.pk}}">Detalle</a></p>
 {% endfor %}
 {% endblock %}

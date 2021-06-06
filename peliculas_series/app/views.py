@@ -142,6 +142,7 @@ class MostrarPeliculaSerie(FormView):
         Handle POST requests: instantiate a form instance with the passed
         POST variables and then check if it's valid.
         """
+
         form = self.get_form()
         if form.is_valid():
             self.agregar_pelicula_serie(request, form.cleaned_data)

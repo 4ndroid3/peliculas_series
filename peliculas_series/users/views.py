@@ -15,6 +15,7 @@ class MostrarPerfilUsuario(TemplateView):
     """
     template_name = 'users/perfil.html'
 
+
 class MostrarViewsUsuario(ListView):
     """Lista de las Peliculas / Series que vio
     el perfil. Posibilidad de ver la lista filtrada
@@ -23,6 +24,15 @@ class MostrarViewsUsuario(ListView):
     model = Vista
     template_name = "users/lista.html"
 
+    def get_ordering(self):
+        """Return the field or fields to use for ordering the queryset."""
+        self.ordering = "-fecha_vista"
+        return self.ordering
+
 class DetallePeliculaSerie(DetailView):
     model = Vista
     template_name = "users/detalle.html"
+
+
+class MostrarEstadisticaUsuario(TemplateView):
+    template_name = 'users/estadisticas.html'
