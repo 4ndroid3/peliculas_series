@@ -6,12 +6,12 @@ from django.views.generic import FormView
 
 # Project Imports
 from .models import Pelicula_Serie, Serie, Pelicula, Tipo, Genero
-from users.models import Vista, User, Profile
+from users.models import Vista, Profile
 from personas.models import Persona
 from .forms import SeleccionarMovieForm
 
 # IMDB Imports
-from imdb import IMDb, IMDbError
+from imdb import IMDb
 
 
 class ObtenerPeliculaSerie(TemplateView):
@@ -57,7 +57,7 @@ class ObtenerPeliculaSerie(TemplateView):
             context['busqueda'] = self.buscar_imdb(busqueda)
         except:
             context = self.get_context_data(**kwargs)
-        
+
         return self.render_to_response(context)
 
 
@@ -125,7 +125,7 @@ class MostrarPeliculaSerie(FormView):
                 'id': search.getID(),
                 'casting': casting,
             }
-        
+
         return info_peli_serie
 
     def get(self, request, *args, **kwargs):
@@ -150,7 +150,7 @@ class MostrarPeliculaSerie(FormView):
         else:
             print('invalid form')
             return self.form_invalid(form)
-    
+
     def agregar_pelicula_serie(self, request, form):
         """
         Recibo el ID de la pelicula dsde el form del front.
@@ -336,4 +336,3 @@ class MostrarPeliculaSerie(FormView):
             review=form['review']
         )
         registrar_vista.save()
-        

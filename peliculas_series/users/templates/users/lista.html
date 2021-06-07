@@ -1,7 +1,8 @@
 {% extends "inicio/base.html" %}
 {% load static %}
 {% block content %}
+<a href="javascript: history.go(-1)">Volver</a>
 {% for vista in object_list %}
-<p>{{vista}} - {{vista.fecha_vista}} | <a href="vistas/{{vista.pk}}">Detalle</a></p>
+<p>{{vista}} {{vista.id_pelicula_serie.pelicula_serie}} - {{vista.fecha_vista}} | <a href="vistas/{{vista.pk}}">Detalle</a></p>
 {% endfor %}
 {% endblock %}

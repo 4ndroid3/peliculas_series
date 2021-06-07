@@ -1,7 +1,4 @@
-from django.shortcuts import render
 from django.views.generic import TemplateView, ListView, DetailView
-
-from app.models import Pelicula_Serie
 from users.models import Vista
 
 
@@ -28,6 +25,7 @@ class MostrarViewsUsuario(ListView):
         """Return the field or fields to use for ordering the queryset."""
         self.ordering = "-fecha_vista"
         return self.ordering
+
 
 class DetallePeliculaSerie(DetailView):
     model = Vista
