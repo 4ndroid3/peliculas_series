@@ -7,6 +7,9 @@ Pillow
 
 # Celery
 Celery
+flower
+django-celery-beat
+django-celery-results
 
 # ImDB API
 imdbpy
