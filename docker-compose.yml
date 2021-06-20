@@ -3,36 +3,48 @@ version: "3.8"
 services:
   django:
     build: .
+    container_name: django
     image: peliculas_series_django
     command: python manage.py runserver 0.0.0.0:8000
+    hostname: django
     volumes:
       - .:/code
     ports:
       - "8000:8000"
+    networks:
+      - main
 
-    # celeryworker:
-    # <<: *django
-    # image: cride_local_celeryworker
-    # depends_on:
-    #     - redis
-    #     - postgres
-        
-    # ports: []
-    # command: /start-celeryworker
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.8
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"
+    networks:
+      - main
 
-    # celerybeat:
-    # <<: *django
-    # image: cride_local_celerybeat
-    # depends_on:
-    #     - redis
-    #     - postgres
-        
-    # ports: []
-    # command: /start-celerybeat
+  celery:
+    container_name: celery
+    image: peliculas_series_django
+    command: bash -c "celery -A peliculas_series worker -l info"
+    depends_on:
+      - rabbitmq
+      - django
+    hostname: celery
+    restart: on-failure
+    networks:
+      - main
 
-    # flower:
-    # <<: *django
-    # image: cride_local_flower
-    # ports:
-    #     - "5555:5555"
-    # command: /start-flower
+  flower:
+    container_name: flower
+    image: mher/flower:0.9.7
+    hostname: flower
+    depends_on:
+      - celery
+    ports:
+      - "5555:5555" 
+    networks:
+      - main
+
+networks:
+  main:

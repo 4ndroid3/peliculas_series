@@ -115,3 +115,6 @@ STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+CELERY_BROKER_URL= 'pyamqp://rabbitmq:5672'
+#CELERY_RESULT_BACKEND = 'django-db'
