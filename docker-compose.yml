@@ -39,8 +39,12 @@ services:
     container_name: flower
     image: mher/flower:0.9.7
     hostname: flower
+    environment:
+      - CELERY_BROKER_URL=pyamqp://rabbitmq:5672
+      - FLOWER_PORT=5555
     depends_on:
       - celery
+      - rabbitmq
     ports:
       - "5555:5555" 
     networks:
