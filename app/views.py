@@ -10,6 +10,9 @@ from users.models import Vista, Profile
 from personas.models import Persona
 from .forms import SeleccionarMovieForm
 
+# Tareas Asincronas
+from app import tasks
+
 # IMDB Imports
 from imdb import IMDb
 
@@ -277,15 +280,19 @@ class MostrarPeliculaSerie(FormView):
                     pelicula_serie.save()
             else:
                 # Si es una serie, agarra por esta rama
-                # Traigo los episodios desde IMDB
-                # ia.update(peli_o_serie,'episodes')
-                serie = Serie(
-                    temporada_nro=form['temporada'],
+                
+                serie = Serie(temporada_nro=form['temporada'])
+                serie.save()
+                
+
+                # Se pasan datos para agregar en forma 
+                # asincrona los datos adicionales de las temporadas
+                tasks.datos_temporada.delay(form['movie_id'], form['temporada'])
                     # temporada_duracion=
                         # int(peli_o_serie['runtimes'][0])*len(peli_o_serie['episodes'][form['temporada']]),
                     # cant_cap=len(peli_o_serie['episodes'][form['temporada']])
-                )
-                serie.save()
+                
+                
 
                 # Agrego la clase tipo pelicula
                 tipo = Tipo(id_serie=serie)
