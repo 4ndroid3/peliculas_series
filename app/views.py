@@ -53,7 +53,6 @@ class ObtenerPeliculaSerie(TemplateView):
         return list_search
 
     def get(self, request, *args, **kwargs):
-        # import pdb; pdb.set_trace()
         try:
             busqueda = request.GET['search']
             context = self.get_context_data(**kwargs)
@@ -287,7 +286,7 @@ class MostrarPeliculaSerie(FormView):
 
                 # Se pasan datos para agregar en forma 
                 # asincrona los datos adicionales de las temporadas
-                tasks.datos_temporada.delay(form['movie_id'], form['temporada'])
+                tasks.datos_temporada.delay(form['movie_id'], form['temporada'], request.user.username)
                     # temporada_duracion=
                         # int(peli_o_serie['runtimes'][0])*len(peli_o_serie['episodes'][form['temporada']]),
                     # cant_cap=len(peli_o_serie['episodes'][form['temporada']])
