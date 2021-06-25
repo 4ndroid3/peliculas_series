@@ -1,8 +1,9 @@
 version: "3.8"
    
 services:
-  django:
-    build: .
+  django: &django
+    build:
+      context: .
     container_name: django
     image: peliculas_series_django
     command: python manage.py runserver 0.0.0.0:8000
@@ -11,8 +12,6 @@ services:
       - .:/code
     ports:
       - "8000:8000"
-    networks:
-      - main
 
   rabbitmq:
     container_name: rabbitmq
@@ -21,20 +20,17 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-    networks:
-      - main
 
   celery:
+    <<: *django
     container_name: celery
     image: peliculas_series_django
     command: bash -c "celery -A peliculas_series worker -l info"
     depends_on:
       - rabbitmq
       - django
-    hostname: celery
     restart: on-failure
-    networks:
-      - main
+    ports: []
 
   flower:
     container_name: flower
@@ -48,8 +44,3 @@ services:
       - rabbitmq
     ports:
       - "5555:5555" 
-    networks:
-      - main
-
-networks:
-  main:

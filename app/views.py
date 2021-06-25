@@ -283,15 +283,16 @@ class MostrarPeliculaSerie(FormView):
                 serie = Serie(temporada_nro=form['temporada'])
                 serie.save()
                 
-
                 # Se pasan datos para agregar en forma 
                 # asincrona los datos adicionales de las temporadas
-                tasks.datos_temporada.delay(form['movie_id'], form['temporada'], request.user.username)
-                    # temporada_duracion=
-                        # int(peli_o_serie['runtimes'][0])*len(peli_o_serie['episodes'][form['temporada']]),
-                    # cant_cap=len(peli_o_serie['episodes'][form['temporada']])
-                
-                
+
+                # tasks.datos_temporada_asincronos.delay(
+                #     form['movie_id'], form['temporada'], request.user.username
+                # )
+
+                tasks.datos_temporada_asincronos.delay(
+                    form['movie_id'], form['temporada'], serie.pk
+                )
 
                 # Agrego la clase tipo pelicula
                 tipo = Tipo(id_serie=serie)
