@@ -9,12 +9,17 @@ from .models import Pelicula_Serie, Serie, Pelicula, Tipo, Genero
 from users.models import Vista, Profile
 from personas.models import Persona
 from .forms import SeleccionarMovieForm
+from django.conf import settings
+from django.core.cache.backends.base import DEFAULT_TIMEOUT
 
 # Tareas Asincronas
 from app import tasks
 
 # IMDB Imports
 from imdb import IMDb
+
+# Redis Imports
+from django.views.decorators.cache import cache_page
 
 
 class ObtenerPeliculaSerie(TemplateView):
@@ -23,6 +28,8 @@ class ObtenerPeliculaSerie(TemplateView):
     las busquedas con la API de IMDb, luego devuelve con un get
     lo encontrado, filtrando solo las peliculas y las series.
     """
+
+    CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
     template_name = 'inicio/index.html'
 
     def buscar_imdb(self, peli_serie):
@@ -52,6 +59,7 @@ class ObtenerPeliculaSerie(TemplateView):
                     ]
         return list_search
 
+    @cache_page(CACHE_TTL)
     def get(self, request, *args, **kwargs):
         try:
             busqueda = request.GET['search']
@@ -130,6 +138,7 @@ class MostrarPeliculaSerie(FormView):
 
         return info_peli_serie
 
+    @cache_page(CACHE_TTL)
     def get(self, request, *args, **kwargs):
         try:
             busqueda = kwargs['movser']

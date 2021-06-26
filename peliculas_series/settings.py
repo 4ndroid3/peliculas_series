@@ -121,4 +121,27 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 CELERY_BROKER_URL= 'pyamqp://rabbitmq:5672'
-#CELERY_RESULT_BACKEND = 'django-db'
+
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         "LOCATION": "redis://127.0.0.1:6379/1",
+#         "OPTIONS": {
+#             "CLIENT_CLASS": "django_redis.client.DefaultClient"
+#         },
+#         "KEY_PREFIX": "example"
+#     }
+# }
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'IGNORE_EXCEPTIONS': True,
+        }
+    }
+}
+
+CACHE_TTL = 60 * 15
