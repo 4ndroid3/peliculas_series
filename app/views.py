@@ -285,11 +285,6 @@ class MostrarPeliculaSerie(FormView):
                 
                 # Se pasan datos para agregar en forma 
                 # asincrona los datos adicionales de las temporadas
-
-                # tasks.datos_temporada_asincronos.delay(
-                #     form['movie_id'], form['temporada'], request.user.username
-                # )
-
                 tasks.datos_temporada_asincronos.delay(
                     form['movie_id'], form['temporada'], serie.pk
                 )

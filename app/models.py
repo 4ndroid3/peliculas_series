@@ -157,7 +157,7 @@ class Pelicula_Serie(models.Model):
         verbose_name='Genero',
     )
     casting = models.ManyToManyField(
-        Persona,
+        Persona,        
         blank=True,
         help_text='Casting de la pelicula o serie',
         verbose_name='Casting',

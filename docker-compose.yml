@@ -8,8 +8,10 @@ services:
     image: peliculas_series_django
     command: python manage.py runserver 0.0.0.0:8000
     hostname: django
+    depends_on:
+      - postgres
     volumes:
-      - .:/code
+      - django-volume:/code
     ports:
       - "8000:8000"
 
@@ -35,7 +37,6 @@ services:
   flower:
     container_name: flower
     image: mher/flower:0.9.7
-    hostname: flower
     environment:
       - CELERY_BROKER_URL=pyamqp://rabbitmq:5672
       - FLOWER_PORT=5555
@@ -44,3 +45,20 @@ services:
       - rabbitmq
     ports:
       - "5555:5555" 
+    
+  postgres:
+    container_name: postgres
+    image: postgres:12.7
+    hostname: postgres
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgresql-data:/var/lib/postgresql/data
+
+volumes:
+  postgresql-data:
+  django-volume:

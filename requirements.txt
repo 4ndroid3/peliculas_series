@@ -17,3 +17,6 @@ imdbpy==2021.4.18
 
 # Debug
 flake8==3.9.0
+
+# Postgres
+psycopg2-binary==2.8.6
