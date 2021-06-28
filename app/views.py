@@ -29,7 +29,6 @@ class ObtenerPeliculaSerie(TemplateView):
     lo encontrado, filtrando solo las peliculas y las series.
     """
 
-    CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
     template_name = 'inicio/index.html'
 
     def buscar_imdb(self, peli_serie):
@@ -59,7 +58,6 @@ class ObtenerPeliculaSerie(TemplateView):
                     ]
         return list_search
 
-    @cache_page(CACHE_TTL)
     def get(self, request, *args, **kwargs):
         try:
             busqueda = request.GET['search']
@@ -81,7 +79,7 @@ class MostrarPeliculaSerie(FormView):
     template_name = 'inicio/movie_info.html'
     form_class = SeleccionarMovieForm
     success_url = '/'
-
+    
     def traer_imdb(self, id_peli_serie):
         """ funcion que trae una pelicula/serie cuando
         se le pasa como parametro un numero de ID"""
@@ -138,7 +136,6 @@ class MostrarPeliculaSerie(FormView):
 
         return info_peli_serie
 
-    @cache_page(CACHE_TTL)
     def get(self, request, *args, **kwargs):
         try:
             busqueda = kwargs['movser']

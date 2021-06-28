@@ -11,7 +11,7 @@ services:
     depends_on:
       - postgres
     volumes:
-      - django-volume:/code
+      - .:/code
     ports:
       - "8000:8000"
 
@@ -64,9 +64,7 @@ services:
     image: redis:5-alpine
     hostname: redis
     volumes:
-      - redis-data:/data
+      - .:/data
 
 volumes:
   postgresql-data:
-  django-volume:
-  redis-data:
