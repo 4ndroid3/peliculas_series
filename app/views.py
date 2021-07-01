@@ -1,16 +1,18 @@
 """ Views de la app principal """
 
 # Django Imports
-from django.views.generic import TemplateView
-from django.views.generic import FormView
+from django.views.generic import TemplateView, FormView, RedirectView, View
+from django.views.generic.base import TemplateResponseMixin, ContextMixin
+from django.conf import settings
+from django.core.cache.backends.base import DEFAULT_TIMEOUT
+from django.http import HttpResponseNotAllowed
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Project Imports
 from .models import Pelicula_Serie, Serie, Pelicula, Tipo, Genero
 from users.models import Vista, Profile
 from personas.models import Persona
 from .forms import SeleccionarMovieForm
-from django.conf import settings
-from django.core.cache.backends.base import DEFAULT_TIMEOUT
 
 # Tareas Asincronas
 from app import tasks
@@ -20,16 +22,19 @@ from imdb import IMDb
 
 # Redis Imports
 from django.views.decorators.cache import cache_page
+from django.core.cache import cache
 
 
-class ObtenerPeliculaSerie(TemplateView):
+class ObtenerPeliculaSerie(View, LoginRequiredMixin, TemplateResponseMixin, ContextMixin):
     """ Clase principal para busqueda de peliculas o series
     esta tiene una funcion principal 'buscar_imdb' que realiza
     las busquedas con la API de IMDb, luego devuelve con un get
     lo encontrado, filtrando solo las peliculas y las series.
     """
-
+    
     template_name = 'inicio/index.html'
+    login_url = '/login/'
+    redirect_field_name = 'redirect_to'
 
     def buscar_imdb(self, peli_serie):
         """ Funcion para buscar una peli/serie en IMDB
@@ -67,7 +72,19 @@ class ObtenerPeliculaSerie(TemplateView):
             context = self.get_context_data(**kwargs)
 
         return self.render_to_response(context)
-
+    
+    # def options(self, request, *args, **kwargs):
+        # super().options(request, *args, **kwargs) 
+        # print(request.user)
+        # if not request.user.is_authenticated:
+        #     HttpResponseRedirect('usuario/not_loged.html')
+        # else:
+        #     print('olis')
+        #     res = cache.keys('*main*')
+        #     if res:
+        #         delete_cache = cache.delete_many(res)
+        #     self.template_name = 'inicio/index.html'
+        
 
 class MostrarPeliculaSerie(FormView):
     """ Al seleccionar una pelicula de la lista dada
@@ -344,3 +361,8 @@ class MostrarPeliculaSerie(FormView):
             review=form['review']
         )
         registrar_vista.save()
+
+
+class NoLogueado(RedirectView):
+    template_name = 'usuario/not_loged.html'
+

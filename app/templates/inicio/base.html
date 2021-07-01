@@ -7,7 +7,6 @@
     {% load static %}
     <title>Peliculas | Series</title>
 </head>
-{% if user.is_authenticated %}
 <body>
    <h1>Busqueda de Peliculas y Series en IMDb</h1>
    <a href="/">Home</a>
@@ -16,8 +15,5 @@
     {% block content %}
 
     {% endblock %}
-{% else %}
-<h1> Para acceder a la pagina debe registrarse </h1>
 </body>
-{% endif %}
 </html>
