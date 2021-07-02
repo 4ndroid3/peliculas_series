@@ -2,7 +2,7 @@
 from django.urls import path
 
 # Project Imports
-from .views import MostrarPerfilUsuario, MostrarViewsUsuario, DetallePeliculaSerie, MostrarEstadisticaUsuario
+from .views import MostrarPerfilUsuario, MostrarViewsUsuario, DetallePeliculaSerie, MostrarEstadisticaUsuario, LoginUser
 
 urlpatterns = [
     path(
@@ -25,4 +25,9 @@ urlpatterns = [
         view=MostrarEstadisticaUsuario.as_view(),
         name='detail',
     ),
+    path(
+        route='login/',
+        view=LoginUser.as_view(),
+        name='login'
+    )
 ]

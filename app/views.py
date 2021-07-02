@@ -25,7 +25,7 @@ from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 
 
-class ObtenerPeliculaSerie(View, LoginRequiredMixin, TemplateResponseMixin, ContextMixin):
+class ObtenerPeliculaSerie(LoginRequiredMixin,TemplateView):
     """ Clase principal para busqueda de peliculas o series
     esta tiene una funcion principal 'buscar_imdb' que realiza
     las busquedas con la API de IMDb, luego devuelve con un get
@@ -86,7 +86,7 @@ class ObtenerPeliculaSerie(View, LoginRequiredMixin, TemplateResponseMixin, Cont
         #     self.template_name = 'inicio/index.html'
         
 
-class MostrarPeliculaSerie(FormView):
+class MostrarPeliculaSerie(LoginRequiredMixin, FormView):
     """ Al seleccionar una pelicula de la lista dada
     en 'ObtenerPeliculaSerie' muestra la informacion completa de la pelicula,
     con la funcion 'traer_imdb' que se llama en el 'get' me muestra una
@@ -363,6 +363,4 @@ class MostrarPeliculaSerie(FormView):
         registrar_vista.save()
 
 
-class NoLogueado(RedirectView):
-    template_name = 'usuario/not_loged.html'
 

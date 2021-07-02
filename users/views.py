@@ -1,8 +1,10 @@
-from django.views.generic import TemplateView, ListView, DetailView
+from django.views.generic import TemplateView, ListView, DetailView, FormView
 from users.models import Vista
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView
 
 
-class MostrarPerfilUsuario(TemplateView):
+class MostrarPerfilUsuario(LoginRequiredMixin, TemplateView):
     """Resumen del Perfil de Usuario Logueado,
     Muestra datos personales de la persona.
     Cuantas peliculas vio? Cuantas temporadas?
@@ -13,7 +15,7 @@ class MostrarPerfilUsuario(TemplateView):
     template_name = 'users/perfil.html'
 
 
-class MostrarViewsUsuario(ListView):
+class MostrarViewsUsuario(LoginRequiredMixin, ListView):
     """Lista de las Peliculas / Series que vio
     el perfil. Posibilidad de ver la lista filtrada
     por varias condiciones.
@@ -27,10 +29,13 @@ class MostrarViewsUsuario(ListView):
         return self.ordering
 
 
-class DetallePeliculaSerie(DetailView):
+class DetallePeliculaSerie(LoginRequiredMixin, DetailView):
     model = Vista
     template_name = "users/detalle.html"
 
 
-class MostrarEstadisticaUsuario(TemplateView):
+class MostrarEstadisticaUsuario(LoginRequiredMixin, TemplateView):
     template_name = 'users/estadisticas.html'
+
+class LoginUser(LoginView):
+    pass
