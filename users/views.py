@@ -3,6 +3,9 @@ from users.models import Vista
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 
+# Project Imports
+from users.forms import CustomLoginForm
+
 
 class MostrarPerfilUsuario(LoginRequiredMixin, TemplateView):
     """Resumen del Perfil de Usuario Logueado,
@@ -46,7 +49,12 @@ class MostrarEstadisticaUsuario(LoginRequiredMixin, TemplateView):
 
 class LoginUser(LoginView):
     """ View de Login personalizado"""
+
     template_name = 'registro/login.html'
+    form_class = CustomLoginForm
+    #success_url = '/'
+    redirect_field_name = 'redirect_to'
+
 
 
 class LogoutUser(LogoutView):
