@@ -1,11 +1,14 @@
-from django.views.generic import TemplateView, ListView, DetailView
+from django.views.generic import TemplateView, ListView, DetailView, CreateView
 from users.models import Vista
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.http import HttpResponseRedirect
 
+# Forms Imports
+from users.forms import CustomLoginForm, CustomSigninForm
+
 # Project Imports
-from users.forms import CustomLoginForm
+from users.models import User
 
 
 class MostrarPerfilUsuario(LoginRequiredMixin, TemplateView):
@@ -67,3 +70,9 @@ class LoginUser(LoginView):
 class LogoutUser(LogoutView):
     """ View de LogOut Personalizado"""
     template_name = 'registro/logged_out.html'
+
+class SignInUser(CreateView):
+    form_class = CustomSigninForm
+    template_name = 'registro/create_user.html'
+    queryset = User
+    success_url = '/'

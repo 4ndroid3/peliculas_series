@@ -1,6 +1,9 @@
 # Django Imports
 from django import forms
-from django.contrib.auth.forms import UsernameField, AuthenticationForm
+from django.contrib.auth.forms import UsernameField, AuthenticationForm, UserCreationForm
+
+# Project Imports
+from users.models import User
 
 
 class CustomLoginForm(AuthenticationForm):
@@ -27,3 +30,11 @@ class CustomLoginForm(AuthenticationForm):
             }
         )
     )
+
+class CustomSigninForm(UserCreationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    class Meta:
+      model = User
+      fields = ('email','username', 'password1', 'password2',)

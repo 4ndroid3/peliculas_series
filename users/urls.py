@@ -7,7 +7,8 @@ from .views import (MostrarPerfilUsuario,
                     DetallePeliculaSerie,
                     MostrarEstadisticaUsuario,
                     LoginUser,
-                    LogoutUser)
+                    LogoutUser,
+                    SignInUser)
 
 urlpatterns = [
     path(
@@ -39,5 +40,10 @@ urlpatterns = [
         route='logout/',
         view=LogoutUser.as_view(),
         name='logout'
+    ),
+    path(
+        route='signin/',
+        view=SignInUser.as_view(),
+        name='signin'
     ),
 ]
