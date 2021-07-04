@@ -2,6 +2,7 @@ from django.views.generic import TemplateView, ListView, DetailView, FormView
 from users.models import Vista
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
+from django.http import HttpResponseRedirect
 
 # Project Imports
 from users.forms import CustomLoginForm
@@ -16,6 +17,7 @@ class MostrarPerfilUsuario(LoginRequiredMixin, TemplateView):
     Pequeño resumen con los generos que más mira el usuario.
     """
     template_name = 'users/perfil.html'
+    login_url = '/login/'
 
 
 class MostrarViewsUsuario(LoginRequiredMixin, ListView):
@@ -25,6 +27,7 @@ class MostrarViewsUsuario(LoginRequiredMixin, ListView):
     """
     model = Vista
     template_name = "users/lista.html"
+    login_url = '/login/'
 
     def get_ordering(self):
         """Return the field or fields to use for ordering the queryset."""
@@ -37,6 +40,7 @@ class DetallePeliculaSerie(LoginRequiredMixin, DetailView):
     de una pelicula vista"""
     model = Vista
     template_name = "users/detalle.html"
+    login_url = '/login/'
 
 
 class MostrarEstadisticaUsuario(LoginRequiredMixin, TemplateView):
@@ -46,14 +50,17 @@ class MostrarEstadisticaUsuario(LoginRequiredMixin, TemplateView):
     por mes, por año, promedios, etc"""
 
     template_name = 'users/estadisticas.html'
+    login_url = '/login/'
 
 class LoginUser(LoginView):
     """ View de Login personalizado"""
 
     template_name = 'registro/login.html'
     form_class = CustomLoginForm
-    #success_url = '/'
-    redirect_field_name = 'redirect_to'
+
+    def form_valid(self, form):
+        super().form_valid(form)
+        return HttpResponseRedirect('/') 
 
 
 

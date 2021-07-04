@@ -9,26 +9,10 @@ class CustomLoginForm(AuthenticationForm):
     def __init__(self, request=None, *args, **kwargs):
         super().__init__(request, *args, **kwargs)
 
-
-    # user_email = forms.EmailField(
-    #     widget=forms.EmailInput(
-    #         attrs={
-    #             'class': 'form-control',
-    #         }
-    #     )
-    # )
-
-    # usr_password = forms.CharField(
-    #     widget=forms.PasswordInput(
-    #         attrs={
-    #             'class': 'form-control',
-    #         }
-    #     )
-    # )
-
     username = UsernameField(
         widget=forms.TextInput(
             attrs={
+                'class': 'form-control',
                 'autofocus': True,
             }
         )

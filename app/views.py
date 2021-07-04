@@ -7,6 +7,9 @@ from django.conf import settings
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.http import HttpResponseNotAllowed
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import get_user_model
+from django.utils.decorators import classonlymethod
+
 
 # Project Imports
 from .models import Pelicula_Serie, Serie, Pelicula, Tipo, Genero
@@ -33,8 +36,8 @@ class ObtenerPeliculaSerie(LoginRequiredMixin,TemplateView):
     """
     
     template_name = 'inicio/index.html'
+    success_url = '/'
     login_url = '/login/'
-    redirect_field_name = 'redirect_to'
 
     def buscar_imdb(self, peli_serie):
         """ Funcion para buscar una peli/serie en IMDB
@@ -63,7 +66,16 @@ class ObtenerPeliculaSerie(LoginRequiredMixin,TemplateView):
                     ]
         return list_search
 
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
+
+        if not request.user.is_authenticated:
+            cache.clear()
+
     def get(self, request, *args, **kwargs):
+        print('caca')
+        # if not request.user.is_authenticated:
+        #     cache.clear()
         try:
             busqueda = request.GET['search']
             context = self.get_context_data(**kwargs)
@@ -73,6 +85,14 @@ class ObtenerPeliculaSerie(LoginRequiredMixin,TemplateView):
 
         return self.render_to_response(context)
     
+    # def dispatch(self, request, *args, **kwargs):
+    #     if not request.user.is_authenticated:
+    #         cache.clear()
+    #     if not request.user.is_authenticated:
+    #         return self.handle_no_permission()
+    #     return super().dispatch(request, *args, **kwargs)
+      
+
     # def options(self, request, *args, **kwargs):
         # super().options(request, *args, **kwargs) 
         # print(request.user)
@@ -96,6 +116,7 @@ class MostrarPeliculaSerie(LoginRequiredMixin, FormView):
     template_name = 'inicio/movie_info.html'
     form_class = SeleccionarMovieForm
     success_url = '/'
+    login_url = '/login/'
     
     def traer_imdb(self, id_peli_serie):
         """ funcion que trae una pelicula/serie cuando

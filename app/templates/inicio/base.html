@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,14 +7,14 @@
     {% load static %}
     <title>Peliculas | Series</title>
 </head>
-<body>
-   <h1>Busqueda de Peliculas y Series en IMDb</h1>
-   <a href="/">Home</a>
-   <a href="/perfil">Mi Perfil | {{ user.get_username }}</a>
-   <a href="/logout">Salir</a>
+    <body>
+        <h1>Busqueda de Peliculas y Series en IMDb</h1>
+        <a href="/">Home</a>
+        <a href="/perfil">Mi Perfil | {{ user.get_username }}</a> 
+        <a href="/logout">| Salir</a>
 
-    {% block content %}
+            {% block content %}
 
-    {% endblock %}
-</body>
+            {% endblock %}
+    </body>
 </html>

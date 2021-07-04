@@ -9,7 +9,7 @@ from .views import ObtenerPeliculaSerie, MostrarPeliculaSerie
 urlpatterns = [
     path(
         route='',
-        view=ObtenerPeliculaSerie.as_view(),#cache_page(60 * 15, key_prefix='main')(ObtenerPeliculaSerie.as_view()),
+        view=cache_page(60 * 15)(ObtenerPeliculaSerie.as_view()),
         name='index',
     ),
     path(
