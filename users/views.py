@@ -1,4 +1,4 @@
-from django.views.generic import TemplateView, ListView, DetailView, FormView
+from django.views.generic import TemplateView, ListView, DetailView
 from users.models import Vista
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
@@ -36,7 +36,7 @@ class MostrarViewsUsuario(LoginRequiredMixin, ListView):
 
 
 class DetallePeliculaSerie(LoginRequiredMixin, DetailView):
-    """Muestra el detalle e informacion detallada 
+    """Muestra el detalle e informacion detallada
     de una pelicula vista"""
     model = Vista
     template_name = "users/detalle.html"
@@ -52,6 +52,7 @@ class MostrarEstadisticaUsuario(LoginRequiredMixin, TemplateView):
     template_name = 'users/estadisticas.html'
     login_url = '/login/'
 
+
 class LoginUser(LoginView):
     """ View de Login personalizado"""
 
@@ -60,8 +61,7 @@ class LoginUser(LoginView):
 
     def form_valid(self, form):
         super().form_valid(form)
-        return HttpResponseRedirect('/') 
-
+        return HttpResponseRedirect('/')
 
 
 class LogoutUser(LogoutView):

@@ -2,7 +2,12 @@
 from django.urls import path
 
 # Project Imports
-from .views import MostrarPerfilUsuario, MostrarViewsUsuario, DetallePeliculaSerie, MostrarEstadisticaUsuario, LoginUser, LogoutUser
+from .views import (MostrarPerfilUsuario,
+                    MostrarViewsUsuario,
+                    DetallePeliculaSerie,
+                    MostrarEstadisticaUsuario,
+                    LoginUser,
+                    LogoutUser)
 
 urlpatterns = [
     path(

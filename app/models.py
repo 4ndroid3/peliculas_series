@@ -2,7 +2,6 @@
 
 # Django Imports
 from django.db import models
-from django.db.models.signals import pre_save
 
 # Project Imports
 from personas.models import Persona
@@ -157,7 +156,7 @@ class Pelicula_Serie(models.Model):
         verbose_name='Genero',
     )
     casting = models.ManyToManyField(
-        Persona,        
+        Persona,
         blank=True,
         help_text='Casting de la pelicula o serie',
         verbose_name='Casting',

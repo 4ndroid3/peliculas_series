@@ -1,15 +1,8 @@
 """ Views de la app principal """
 
 # Django Imports
-from django.views.generic import TemplateView, FormView, RedirectView, View
-from django.views.generic.base import TemplateResponseMixin, ContextMixin
-from django.conf import settings
-from django.core.cache.backends.base import DEFAULT_TIMEOUT
-from django.http import HttpResponseNotAllowed
+from django.views.generic import TemplateView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth import get_user_model
-from django.utils.decorators import classonlymethod
-
 
 # Project Imports
 from .models import Pelicula_Serie, Serie, Pelicula, Tipo, Genero
@@ -24,17 +17,16 @@ from app import tasks
 from imdb import IMDb
 
 # Redis Imports
-from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 
 
-class ObtenerPeliculaSerie(LoginRequiredMixin,TemplateView):
+class ObtenerPeliculaSerie(LoginRequiredMixin, TemplateView):
     """ Clase principal para busqueda de peliculas o series
     esta tiene una funcion principal 'buscar_imdb' que realiza
     las busquedas con la API de IMDb, luego devuelve con un get
     lo encontrado, filtrando solo las peliculas y las series.
     """
-    
+
     template_name = 'inicio/index.html'
     success_url = '/'
     login_url = '/login/'
@@ -84,27 +76,7 @@ class ObtenerPeliculaSerie(LoginRequiredMixin,TemplateView):
             context = self.get_context_data(**kwargs)
 
         return self.render_to_response(context)
-    
-    # def dispatch(self, request, *args, **kwargs):
-    #     if not request.user.is_authenticated:
-    #         cache.clear()
-    #     if not request.user.is_authenticated:
-    #         return self.handle_no_permission()
-    #     return super().dispatch(request, *args, **kwargs)
-      
 
-    # def options(self, request, *args, **kwargs):
-        # super().options(request, *args, **kwargs) 
-        # print(request.user)
-        # if not request.user.is_authenticated:
-        #     HttpResponseRedirect('usuario/not_loged.html')
-        # else:
-        #     print('olis')
-        #     res = cache.keys('*main*')
-        #     if res:
-        #         delete_cache = cache.delete_many(res)
-        #     self.template_name = 'inicio/index.html'
-        
 
 class MostrarPeliculaSerie(LoginRequiredMixin, FormView):
     """ Al seleccionar una pelicula de la lista dada
@@ -117,7 +89,7 @@ class MostrarPeliculaSerie(LoginRequiredMixin, FormView):
     form_class = SeleccionarMovieForm
     success_url = '/'
     login_url = '/login/'
-    
+
     def traer_imdb(self, id_peli_serie):
         """ funcion que trae una pelicula/serie cuando
         se le pasa como parametro un numero de ID"""
@@ -323,11 +295,11 @@ class MostrarPeliculaSerie(LoginRequiredMixin, FormView):
                     pelicula_serie.save()
             else:
                 # Si es una serie, agarra por esta rama
-                
+
                 serie = Serie(temporada_nro=form['temporada'])
                 serie.save()
-                
-                # Se pasan datos para agregar en forma 
+
+                # Se pasan datos para agregar en forma
                 # asincrona los datos adicionales de las temporadas
                 tasks.datos_temporada_asincronos.delay(
                     form['movie_id'], form['temporada'], serie.pk
@@ -363,12 +335,14 @@ class MostrarPeliculaSerie(LoginRequiredMixin, FormView):
                         )
                     )
                     pelicula_serie.save()
-        
+
         # Agrego la pelicula vista al usuario logueado
         usuario_logueado = Profile.objects.get(id_users=request.user)
 
         if form['temporada'] == 0:
-            pelicula_serie_vista = Pelicula_Serie.objects.get(id_imdb=form['movie_id'])
+            pelicula_serie_vista = Pelicula_Serie.objects.get(
+                id_imdb=form['movie_id']
+            )
         else:
             pelicula_serie_vista = Pelicula_Serie.objects.get(
                 pelicula_serie__id_serie__temporada_nro=form['temporada'],
@@ -382,6 +356,3 @@ class MostrarPeliculaSerie(LoginRequiredMixin, FormView):
             review=form['review']
         )
         registrar_vista.save()
-
-
-

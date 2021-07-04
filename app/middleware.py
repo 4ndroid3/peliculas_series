@@ -1,6 +1,7 @@
 # Cache imports
 from django.core.cache import cache
 
+
 class CustomCacheMiddleware:
     """ Process View se ejecuta y chekea si hay usuario logueado
     en caso de que no esté logueado, borra el caché """
