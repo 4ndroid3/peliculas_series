@@ -13,4 +13,4 @@ Luego con estos datos se hacen informes mensuales con los que ir
 comparando a traves del tiempo
 
 # DB Design:
-![drawSQL-export-2021-05-04_23_32](https://user-images.githubusercontent.com/35976464/117091218-fd060e00-ad30-11eb-9b4d-6230e7ebc54f.png)
+![drawSQL-export-2021-07-04_19_29](https://user-images.githubusercontent.com/35976464/124401131-28d84c80-dcfe-11eb-9563-f209b05c4f0f.png)
