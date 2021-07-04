@@ -58,16 +58,7 @@ class ObtenerPeliculaSerie(LoginRequiredMixin, TemplateView):
                     ]
         return list_search
 
-    def setup(self, request, *args, **kwargs):
-        super().setup(request, *args, **kwargs)
-
-        if not request.user.is_authenticated:
-            cache.clear()
-
     def get(self, request, *args, **kwargs):
-        print('caca')
-        # if not request.user.is_authenticated:
-        #     cache.clear()
         try:
             busqueda = request.GET['search']
             context = self.get_context_data(**kwargs)
