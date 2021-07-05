@@ -1,13 +1,30 @@
 # BD de peliculas y series
 
-Desde la API de IMDb, se levantan los datos de las peliculas y series,
-estos datos se los captura y se los van almacenando en una DB.
+### Datos técnicos.
+La pagina funciona con un contenedor de Docker el cual levanta nuestros servicios.
 
-Con los datos almacenados se arman estadisticas, como:
-Fecha en la que se vio la pelicula.
-Duración.
-Casting.
-Directores.
+Servicios:
+- Django
+- DB: Postgres
+- Tareas Asincronas: Celery, Worker: RabbitMQ, Monitoreo: Flower
+- Caché: Redis
+
+### Funcion de la Página:
+La funcion principal de la Pagina es registrar las Peliculas y Series vistas por un usuario.
+
+Para ingresar a la pagina se debe realizar una autentificacion de usuario.
+Para la misma se usó el sistema de autentificacion por defecto de Django.
+
+Se obtienen los datos de las peliculas y series a traves de una API llamada IMDBpy (https://github.com/alberanid/imdbpy)
+Se creo un buscador en la pagina principal en el cual vamos trayendo los datos; la logica principal se realiza al buscar
+una pelicula y chekear si está en la DB en caso de que otro usuario ya haya agregado la misma. En caso de que ya este, solo
+la agrega al perfil de Peliculas / Series vistas del usuario.
+
+Los datos que se agregan al perfil del usuario son:
+- Fecha en la que se vio la pelicula.
+- Duración.
+- Casting.
+- Directores (en caso de que sea Pelicula)
 
 Luego con estos datos se hacen informes mensuales con los que ir
 comparando a traves del tiempo
