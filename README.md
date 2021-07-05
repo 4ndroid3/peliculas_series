@@ -1,7 +1,7 @@
 # BD de peliculas y series
 
 ### Datos técnicos.
-La pagina funciona con un contenedor de Docker el cual levanta nuestros servicios.
+La pagina funciona con un contenedor de Docker el cual levanta los servicios utilizados.
 
 Servicios:
 - Django
