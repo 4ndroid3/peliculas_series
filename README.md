@@ -31,3 +31,8 @@ comparando a traves del tiempo
 
 # DB Design:
 ![drawSQL-export-2021-07-04_19_29](https://user-images.githubusercontent.com/35976464/124401131-28d84c80-dcfe-11eb-9563-f209b05c4f0f.png)
+
+## Imagenes del proyecto
+![PyS1](https://user-images.githubusercontent.com/35976464/126568729-29e466b2-733b-4cc8-8698-4f7ff7b9b288.png)
+![PyS2](https://user-images.githubusercontent.com/35976464/126568738-f8b3b560-f8d9-4539-9508-9d572516857e.png)
+![PyS3](https://user-images.githubusercontent.com/35976464/126568741-69273bf9-e2ee-49cf-b334-511c84c175a6.png)
